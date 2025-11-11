@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACO TSP Interactive Playground</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .control-panel {
+            background: #f8f9fa;
+            padding: 25px;
+            border-right: 2px solid #e9ecef;
+            overflow-y: auto;
+            max-height: calc(100vh - 200px);
+        }
+
+        .visualization {
+            padding: 25px;
+            background: white;
+        }
+
+        .section {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .param-group {
+            margin-bottom: 15px;
+        }
+
+        .param-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #495057;
+            font-size: 0.9em;
+        }
+
+        .param-group input[type="range"],
+        .param-group input[type="number"],
+        .param-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .param-group input[type="range"] {
+            padding: 0;
+        }
+
+        .param-value {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.85em;
+            margin-left: 5px;
+            font-weight: 600;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #5a6268;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            background: #c82333;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        #canvas-container {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            background: #f8f9fa;
+            overflow: hidden;
+        }
+
+        #map-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .progress-container {
+            margin: 15px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85em;
+        }
+
+        #convergence-chart {
+            margin-top: 20px;
+            max-height: 250px;
+        }
+
+        .log-container {
+            background: #212529;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+
+        .log-line {
+            margin-bottom: 3px;
+        }
+
+        .city-marker {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #667eea;
+            border: 2px solid white;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .city-marker:hover {
+            width: 16px;
+            height: 16px;
+            background: #764ba2;
+        }
+
+        .city-marker.start {
+            background: #28a745;
+            width: 16px;
+            height: 16px;
+            z-index: 10;
+        }
+
+        .city-label {
+            position: absolute;
+            font-size: 0.75em;
+            font-weight: 600;
+            color: #212529;
+            background: rgba(255,255,255,0.9);
+            padding: 2px 6px;
+            border-radius: 3px;
+            pointer-events: none;
+            white-space: nowrap;
+            transform: translate(-50%, -120%);
+        }
+
+        .ant {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #ff6b6b;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.1s linear;
+            z-index: 5;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.5); }
+        }
+
+        .ant.active {
+            animation: pulse 0.5s infinite;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            pointer-events: none;
+            z-index: 100;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🐜 ACO TSP Interactive Playground</h1>
+            <p>Thử nghiệm và visualize thuật toán Ant Colony Optimization real-time</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <div class="section">
+                    <h3>⚙️ Cấu hình Thuật toán</h3>
+
+                    <div class="param-group">
+                        <label>
+                            Số kiến (n_ants)
+                            <span class="param-value" id="value-ants">30</span>
+                        </label>
+                        <input type="range" id="param-ants" min="10" max="100" value="30" step="5">
+                    </div>
+
+                    <div class="param-group">
+                        <label>
+                            Số iterations
+                            <span class="param-value" id="value-iterations">50</span>
+                        </label>
+                        <input type="range" id="param-iterations" min="10" max="200" value="50" step="10">
+                    </div>
+
+                    <div class="param-group">
+                        <label>
+                            Alpha (α) - Pheromone weight
+                            <span class="param-value" id="value-alpha">1.0</span>
+                        </label>
+                        <input type="range" id="param-alpha" min="0.1" max="3.0" value="1.0" step="0.1">
+                    </div>
+
+                    <div class="param-group">
+                        <label>
+                            Beta (β) - Heuristic weight
+                            <span class="param-value" id="value-beta">5.0</span>
+                        </label>
+                        <input type="range" id="param-beta" min="1.0" max="10.0" value="5.0" step="0.5">
+                    </div>
+
+                    <div class="param-group">
+                        <label>
+                            Evaporation (ρ)
+                            <span class="param-value" id="value-evap">0.1</span>
+                        </label>
+                        <input type="range" id="param-evap" min="0.05" max="0.5" value="0.1" step="0.05">
+                    </div>
+
+                    <div class="param-group">
+                        <label>
+                            Tốc độ animation (ms)
+                            <span class="param-value" id="value-speed">100</span>
+                        </label>
+                        <input type="range" id="param-speed" min="10" max="500" value="100" step="10">
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>🏙️ Chọn Thành phố</h3>
+
+                    <div class="param-group">
+                        <label>Thành phố bắt đầu</label>
+                        <select id="start-city">
+                            <option value="Paris">Paris</option>
+                            <option value="London">London</option>
+                            <option value="Berlin">Berlin</option>
+                            <option value="Rome">Rome</option>
+                            <option value="Madrid">Madrid</option>
+                        </select>
+                    </div>
+
+                    <div class="param-group">
+                        <label>Số thành phố sử dụng</label>
+                        <select id="num-cities">
+                            <option value="10">10 cities</option>
+                            <option value="15">15 cities</option>
+                            <option value="20">20 cities</option>
+                            <option value="30" selected>30 cities (All)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>🎮 Điều khiển</h3>
+
+                    <button class="btn btn-primary" id="btn-start">▶️ Bắt đầu</button>
+                    <button class="btn btn-secondary" id="btn-pause" disabled>⏸️ Tạm dừng</button>
+                    <button class="btn btn-danger" id="btn-reset">🔄 Reset</button>
+                    <button class="btn btn-secondary" id="btn-step" disabled>👣 Step</button>
+                </div>
+
+                <div class="section">
+                    <h3>📊 Thống kê Real-time</h3>
+                    <div class="stat-card">
+                        <div class="stat-value" id="stat-iteration">0</div>
+                        <div class="stat-label">Iteration</div>
+                    </div>
+                    <div class="stat-card" style="margin-top: 10px;">
+                        <div class="stat-value" id="stat-distance">∞</div>
+                        <div class="stat-label">Best Distance (km)</div>
+                    </div>
+                    <div class="stat-card" style="margin-top: 10px;">
+                        <div class="stat-value" id="stat-improvement">0%</div>
+                        <div class="stat-label">Improvement</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visualization Area -->
+            <div class="visualization">
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress">0%</div>
+                    </div>
+                </div>
+
+                <div id="canvas-container">
+                    <canvas id="map-canvas"></canvas>
+                    <div class="tooltip" id="tooltip"></div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="stat-ants-active">0</div>
+                        <div class="stat-label">Ants Active</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="stat-paths">0</div>
+                        <div class="stat-label">Paths Found</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="stat-avg">∞</div>
+                        <div class="stat-label">Avg Distance</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="stat-time">0s</div>
+                        <div class="stat-label">Elapsed Time</div>
+                    </div>
+                </div>
+
+                <canvas id="convergence-chart"></canvas>
+
+                <div class="log-container" id="log-container">
+                    <div class="log-line">💡 Sẵn sàng! Nhấn "Bắt đầu" để chạy thuật toán...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="aco-simulation.js"></script>
+</body>
+</html>
