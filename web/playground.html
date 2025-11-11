@@ -272,6 +272,28 @@
 
         .log-line {
             margin-bottom: 3px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .log-expand-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            cursor: pointer;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .log-expand-btn:hover {
+            background: #5568d3;
+            transform: scale(1.05);
         }
 
         /* Map controls overlay */

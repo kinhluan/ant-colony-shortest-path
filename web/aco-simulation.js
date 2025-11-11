@@ -249,7 +249,13 @@ async function runIteration() {
                 state.initialDistance = distance;
             }
 
-            logMessage(`🎯 New best: ${distance.toFixed(2)} km at iteration ${state.iteration}`);
+            logMessage(`🎯 New best: ${distance.toFixed(2)} km at iteration ${state.iteration}`, true);
+
+            // Log tour details
+            const tourPreview = tour.length > 8
+                ? `${tour.slice(0, 4).join(' → ')} ... ${tour.slice(-4).join(' → ')}`
+                : tour.join(' → ');
+            logMessage(`📍 Tour (${tour.length} cities): ${tourPreview}`);
         }
 
         // Animate ant (show briefly)
@@ -661,18 +667,60 @@ function updateChart() {
 }
 
 // Log message
-function logMessage(msg) {
+function logMessage(msg, isExpandable = false) {
     const logContainer = document.getElementById('log-container');
     const line = document.createElement('div');
     line.className = 'log-line';
-    line.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+
+    if (isExpandable && state.bestTour && state.bestTour.length > 0) {
+        const timestamp = new Date().toLocaleTimeString();
+        line.innerHTML = `
+            <span>[${timestamp}] ${msg}</span>
+            <button class="log-expand-btn" onclick="showFullTour()">View Full Tour</button>
+        `;
+    } else {
+        line.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+    }
+
     logContainer.insertBefore(line, logContainer.firstChild);
 
-    // Keep only last 20 messages
-    while (logContainer.children.length > 20) {
+    // Keep only last 30 messages (increased from 20)
+    while (logContainer.children.length > 30) {
         logContainer.removeChild(logContainer.lastChild);
     }
 }
+
+// Show full tour in a modal/alert (global function for onclick)
+window.showFullTour = function() {
+    if (!state.bestTour || state.bestTour.length === 0) {
+        logMessage('⚠️ No tour available yet');
+        return;
+    }
+
+    const tourList = state.bestTour.map((city, index) => `${index + 1}. ${city}`).join('\n');
+    const message = `
+🏆 Best Tour Found
+Total Distance: ${state.bestDistance.toFixed(2)} km
+Cities: ${state.bestTour.length}
+
+Tour Order:
+${tourList}
+
+(Returns to: ${state.bestTour[0]})
+    `.trim();
+
+    // Show in alert for now (can be replaced with modal later)
+    alert(message);
+
+    // Also log to console
+    console.log('=== BEST TOUR ===');
+    console.log(`Distance: ${state.bestDistance.toFixed(2)} km`);
+    console.log(`Cities (${state.bestTour.length}):`);
+    state.bestTour.forEach((city, index) => {
+        console.log(`  ${index + 1}. ${city}`);
+    });
+    console.log('================');
+};
 
 // Event listeners for parameters
 function setupParameterListeners() {
