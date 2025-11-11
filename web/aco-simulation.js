@@ -72,7 +72,11 @@ let state = {
 
     // Chart
     chart: null,
-    startTime: null
+    startTime: null,
+
+    // Algorithm Details Modal
+    algoModalOpen: false,
+    currentAlgoTab: 'formulas'
 };
 
 // Haversine distance
@@ -613,6 +617,11 @@ function updateUI(avgDistance, pathsFound) {
     const progress = (state.iteration / state.maxIterations * 100).toFixed(0);
     document.getElementById('progress').style.width = progress + '%';
     document.getElementById('progress').textContent = progress + '%';
+
+    // Update Algorithm Details if modal is open
+    if (state.algoModalOpen) {
+        refreshAlgoDetails();
+    }
 }
 
 // Initialize chart
@@ -928,7 +937,17 @@ window.switchAlgoTab = function(tabName, targetElement) {
     contents.forEach(content => content.classList.remove('active'));
     document.getElementById(`tab-${tabName}`).classList.add('active');
 
+    // Store current tab
+    state.currentAlgoTab = tabName;
+
     // Populate content based on tab
+    refreshAlgoDetails();
+};
+
+// Refresh Algorithm Details based on current tab
+function refreshAlgoDetails() {
+    const tabName = state.currentAlgoTab;
+
     if (tabName === 'distances') {
         displayDistanceMatrix();
     } else if (tabName === 'pheromone') {
@@ -938,7 +957,7 @@ window.switchAlgoTab = function(tabName, targetElement) {
     } else if (tabName === 'formulas') {
         updateFormulaValues();
     }
-};
+}
 
 // Update formula values with current parameters
 function updateFormulaValues() {
@@ -956,28 +975,43 @@ function displayDistanceMatrix() {
         return;
     }
 
-    // Create table
-    let html = '<table class="matrix-table"><thead><tr><th>From / To</th>';
+    // Show ALL cities
+    const displayCities = state.cities;
 
-    // Limit to first 10 cities for display
-    const displayCities = state.cities.slice(0, 10);
+    // Create table with sticky header
+    let html = `
+        <div style="margin-bottom: 15px;">
+            <strong>Distance Matrix</strong> - Haversine distance between cities (in km)
+        </div>
+        <table class="matrix-table">
+            <thead>
+                <tr>
+                    <th style="position: sticky; left: 0; z-index: 20; background: #667eea;">From / To</th>`;
 
     displayCities.forEach(city => {
-        html += `<th>${city}</th>`;
+        html += `<th>${city.length > 10 ? city.substring(0, 8) + '..' : city}</th>`;
     });
     html += '</tr></thead><tbody>';
 
     // Add rows
     displayCities.forEach(city1 => {
-        html += `<tr><th>${city1}</th>`;
+        html += `<tr><th style="position: sticky; left: 0; z-index: 10; background: #667eea; color: white;">${city1.length > 10 ? city1.substring(0, 8) + '..' : city1}</th>`;
         displayCities.forEach(city2 => {
             if (city1 === city2) {
-                html += '<td style="background: #e9ecef;">-</td>';
+                html += '<td style="background: #e9ecef; font-weight: bold;">-</td>';
             } else {
                 const key = `${city1}-${city2}`;
                 const distance = state.distances[key];
                 if (distance !== undefined) {
-                    html += `<td>${distance.toFixed(0)}</td>`;
+                    // Highlight if this edge is in best tour
+                    const inTour = state.bestTour && (
+                        (state.bestTour.includes(city1) && state.bestTour.includes(city2) &&
+                         Math.abs(state.bestTour.indexOf(city1) - state.bestTour.indexOf(city2)) === 1) ||
+                        (state.bestTour[0] === city1 && state.bestTour[state.bestTour.length-1] === city2) ||
+                        (state.bestTour[0] === city2 && state.bestTour[state.bestTour.length-1] === city1)
+                    );
+                    const style = inTour ? 'background: #fff3cd; font-weight: bold; color: #856404;' : '';
+                    html += `<td style="${style}">${distance.toFixed(0)}</td>`;
                 } else {
                     html += '<td>N/A</td>';
                 }
@@ -988,9 +1022,10 @@ function displayDistanceMatrix() {
 
     html += '</tbody></table>';
 
-    if (state.cities.length > 10) {
-        html += `<p style="margin-top: 10px; color: #6c757d; font-size: 0.9em;">Showing first 10 of ${state.cities.length} cities</p>`;
-    }
+    html += `<p style="margin-top: 10px; color: #6c757d; font-size: 0.9em;">
+        📊 Showing all ${state.cities.length} cities.
+        ${state.bestTour ? '<span style="background: #fff3cd; padding: 2px 6px; border-radius: 3px; margin-left: 10px;">Yellow = in best tour</span>' : ''}
+    </p>`;
 
     container.innerHTML = html;
 }
@@ -1007,24 +1042,37 @@ function displayPheromoneMatrix() {
     // Find max pheromone for normalization
     const maxPheromone = Math.max(...Object.values(state.pheromones));
     const minPheromone = Math.min(...Object.values(state.pheromones));
+    const avgPheromone = Object.values(state.pheromones).reduce((a, b) => a + b, 0) / Object.values(state.pheromones).length;
 
-    // Create table
-    let html = '<table class="matrix-table"><thead><tr><th>From / To</th>';
+    // Show ALL cities
+    const displayCities = state.cities;
 
-    // Limit to first 10 cities for display
-    const displayCities = state.cities.slice(0, 10);
+    // Create table with sticky header
+    let html = `
+        <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <strong>Pheromone Matrix</strong> - Iteration ${state.iteration}
+            </div>
+            <div style="font-size: 0.85em; color: #6c757d;">
+                Min: ${minPheromone.toFixed(2)} | Avg: ${avgPheromone.toFixed(2)} | Max: ${maxPheromone.toFixed(2)}
+            </div>
+        </div>
+        <table class="matrix-table">
+            <thead>
+                <tr>
+                    <th style="position: sticky; left: 0; z-index: 20; background: #667eea;">From / To</th>`;
 
     displayCities.forEach(city => {
-        html += `<th>${city}</th>`;
+        html += `<th>${city.length > 10 ? city.substring(0, 8) + '..' : city}</th>`;
     });
     html += '</tr></thead><tbody>';
 
     // Add rows with heatmap coloring
     displayCities.forEach(city1 => {
-        html += `<tr><th>${city1}</th>`;
+        html += `<tr><th style="position: sticky; left: 0; z-index: 10; background: #667eea; color: white;">${city1.length > 10 ? city1.substring(0, 8) + '..' : city1}</th>`;
         displayCities.forEach(city2 => {
             if (city1 === city2) {
-                html += '<td style="background: #e9ecef;">-</td>';
+                html += '<td style="background: #e9ecef; font-weight: bold;">-</td>';
             } else {
                 const key = `${city1}-${city2}`;
                 const pheromone = state.pheromones[key];
@@ -1036,7 +1084,7 @@ function displayPheromoneMatrix() {
                     else if (normalized > 0.5) colorClass = 'heatmap-high';
                     else if (normalized > 0.25) colorClass = 'heatmap-med';
 
-                    html += `<td class="${colorClass}">${pheromone.toFixed(2)}</td>`;
+                    html += `<td class="${colorClass}" title="${pheromone.toFixed(4)}">${pheromone.toFixed(2)}</td>`;
                 } else {
                     html += '<td>N/A</td>';
                 }
@@ -1047,31 +1095,32 @@ function displayPheromoneMatrix() {
 
     html += '</tbody></table>';
 
-    if (state.cities.length > 10) {
-        html += `<p style="margin-top: 10px; color: #6c757d; font-size: 0.9em;">Showing first 10 of ${state.cities.length} cities</p>`;
-    }
+    html += `<p style="margin-top: 10px; color: #6c757d; font-size: 0.9em;">📊 Showing all ${state.cities.length} cities</p>`;
 
     html += `<div style="margin-top: 15px; padding: 12px; background: #f8f9fa; border-radius: 6px; font-size: 0.85em;">
         <strong>Color Legend:</strong><br>
         <div style="display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap;">
             <div style="display: flex; align-items: center; gap: 5px;">
                 <div style="width: 20px; height: 20px; background: #e3f2fd; border: 1px solid #ccc;"></div>
-                <span>Low</span>
+                <span>Low (0-25%)</span>
             </div>
             <div style="display: flex; align-items: center; gap: 5px;">
                 <div style="width: 20px; height: 20px; background: #90caf9; border: 1px solid #ccc;"></div>
-                <span>Medium</span>
+                <span>Medium (25-50%)</span>
             </div>
             <div style="display: flex; align-items: center; gap: 5px;">
-                <div style="width: 20px; height: 20px; background: #42a5f5; border: 1px solid #ccc;"></div>
-                <span>High</span>
+                <div style="width: 20px; height: 20px; background: #42a5f5; border: 1px solid #ccc; color: white;"></div>
+                <span>High (50-75%)</span>
             </div>
             <div style="display: flex; align-items: center; gap: 5px;">
-                <div style="width: 20px; height: 20px; background: #1976d2; border: 1px solid #ccc;"></div>
-                <span>Very High</span>
+                <div style="width: 20px; height: 20px; background: #1976d2; border: 1px solid #ccc; color: white;"></div>
+                <span>Very High (75-100%)</span>
             </div>
         </div>
-        <p style="margin-top: 8px; color: #6c757d;">Higher pheromone = stronger ant trail (better path)</p>
+        <p style="margin-top: 8px; color: #6c757d;">
+            <strong>💡 Tip:</strong> Higher pheromone = stronger ant trail = edges more likely to be chosen.
+            Hover over cells to see exact values.
+        </p>
     </div>`;
 
     container.innerHTML = html;
@@ -1145,12 +1194,15 @@ function displayProbabilities() {
 
 // Show Algorithm Details Modal
 window.showAlgoModal = function() {
+    state.algoModalOpen = true;
     updateFormulaValues();
+    refreshAlgoDetails(); // Load current tab content
     document.getElementById('algo-modal').classList.add('show');
 };
 
 // Close Algorithm Details Modal
 window.closeAlgoModal = function() {
+    state.algoModalOpen = false;
     document.getElementById('algo-modal').classList.remove('show');
 };
 

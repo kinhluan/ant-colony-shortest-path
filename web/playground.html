@@ -325,11 +325,18 @@
             border-radius: 12px;
             padding: 30px;
             max-width: 600px;
-            max-height: 80vh;
+            max-height: 85vh;
             overflow-y: auto;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
             animation: slideUp 0.3s ease;
             position: relative;
+        }
+
+        /* Larger modal for Algorithm Details */
+        #algo-modal .tour-modal-content {
+            max-width: 95%;
+            width: 1200px;
+            max-height: 90vh;
         }
 
         @keyframes slideUp {
@@ -558,25 +565,27 @@
 
         /* Matrix Container */
         .matrix-container {
-            max-height: 500px;
+            max-height: 60vh;
             overflow: auto;
             background: #f8f9fa;
             padding: 15px;
             border-radius: 8px;
+            position: relative;
         }
 
         .matrix-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.85em;
+            font-size: 0.75em;
             background: white;
         }
 
         .matrix-table th,
         .matrix-table td {
             border: 1px solid #dee2e6;
-            padding: 8px;
+            padding: 6px 4px;
             text-align: center;
+            min-width: 45px;
         }
 
         .matrix-table th {
@@ -586,10 +595,24 @@
             position: sticky;
             top: 0;
             z-index: 10;
+            white-space: nowrap;
         }
 
         .matrix-table td {
             background: white;
+            font-size: 0.9em;
+        }
+
+        /* Sticky first column */
+        .matrix-table th:first-child,
+        .matrix-table td:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 11;
+        }
+
+        .matrix-table thead th:first-child {
+            z-index: 21;
         }
 
         /* Heatmap colors */
