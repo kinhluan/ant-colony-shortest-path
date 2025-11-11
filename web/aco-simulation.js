@@ -340,7 +340,7 @@ function initializeMap() {
 
 // Update marker with order number
 function updateMarkerWithNumber(city, orderNumber) {
-    if (!state.markers[city] || !state.showNumbers) return;
+    if (!state.markers[city]) return;
 
     const { marker, data } = state.markers[city];
     const isStart = city === state.startCity;
@@ -348,28 +348,49 @@ function updateMarkerWithNumber(city, orderNumber) {
     // Remove old marker
     state.map.removeLayer(marker);
 
-    // Create new marker with number badge
-    const newMarker = L.marker([data.lat, data.lon], {
-        icon: L.divIcon({
-            html: `
-                <div class="numbered-marker">
-                    <div class="marker-circle ${isStart ? 'start' : ''}""></div>
-                    <div class="marker-number">${orderNumber}</div>
-                </div>
-            `,
-            className: 'custom-marker-icon',
-            iconSize: [30, 30],
-            iconAnchor: [15, 15]
-        })
-    }).addTo(state.map);
+    let newMarker;
 
-    newMarker.bindPopup(`
-        <div class="city-popup">
-            <h4>${city} <span style="color: #ff6b6b;">#${orderNumber}</span></h4>
-            <p>${data.country}</p>
-            <p>📍 ${data.lat.toFixed(2)}, ${data.lon.toFixed(2)}</p>
-        </div>
-    `);
+    if (state.showNumbers) {
+        // Create marker with number badge
+        newMarker = L.marker([data.lat, data.lon], {
+            icon: L.divIcon({
+                html: `
+                    <div class="numbered-marker">
+                        <div class="marker-circle ${isStart ? 'start' : ''}"></div>
+                        <div class="marker-number">${orderNumber}</div>
+                    </div>
+                `,
+                className: 'custom-marker-icon',
+                iconSize: [30, 30],
+                iconAnchor: [15, 15]
+            })
+        }).addTo(state.map);
+
+        newMarker.bindPopup(`
+            <div class="city-popup">
+                <h4>${city} <span style="color: #ff6b6b;">#${orderNumber}</span></h4>
+                <p>${data.country}</p>
+                <p>📍 ${data.lat.toFixed(2)}, ${data.lon.toFixed(2)}</p>
+            </div>
+        `);
+    } else {
+        // Create simple circle marker without number
+        newMarker = L.circleMarker([data.lat, data.lon], {
+            radius: isStart ? 10 : 7,
+            fillColor: isStart ? '#28a745' : '#667eea',
+            color: 'white',
+            weight: 2,
+            fillOpacity: 0.9
+        }).addTo(state.map);
+
+        newMarker.bindPopup(`
+            <div class="city-popup">
+                <h4>${city}</h4>
+                <p>${data.country}</p>
+                <p>📍 ${data.lat.toFixed(2)}, ${data.lon.toFixed(2)}</p>
+            </div>
+        `);
+    }
 
     state.markers[city] = { marker: newMarker, data };
 }
@@ -429,6 +450,39 @@ function drawVisualization() {
         state.pheromoneLines.push(line);
     }
 
+    // If no tour yet, ensure markers are simple circles
+    if (!state.bestTour || state.bestTour.length === 0) {
+        // Reset all markers to simple circles
+        for (const city of state.cities) {
+            const { marker, data } = state.markers[city];
+            const isStart = city === state.startCity;
+
+            // Check if current marker is not a CircleMarker
+            if (!(marker instanceof L.CircleMarker)) {
+                state.map.removeLayer(marker);
+
+                const newMarker = L.circleMarker([data.lat, data.lon], {
+                    radius: isStart ? 10 : 7,
+                    fillColor: isStart ? '#28a745' : '#667eea',
+                    color: 'white',
+                    weight: 2,
+                    fillOpacity: 0.9
+                }).addTo(state.map);
+
+                newMarker.bindPopup(`
+                    <div class="city-popup">
+                        <h4>${city}</h4>
+                        <p>${data.country}</p>
+                        <p>📍 ${data.lat.toFixed(2)}, ${data.lon.toFixed(2)}</p>
+                    </div>
+                `);
+
+                state.markers[city] = { marker: newMarker, data };
+            }
+        }
+        return;
+    }
+
     // Draw best tour if exists
     if (state.bestTour && state.bestTour.length > 0) {
         const coords = state.bestTour.map(city => {
@@ -455,12 +509,10 @@ function drawVisualization() {
             </div>
         `);
 
-        // Update markers with tour order numbers
-        if (state.showNumbers) {
-            state.bestTour.forEach((city, index) => {
-                updateMarkerWithNumber(city, index + 1);
-            });
-        }
+        // Update all markers in the tour
+        state.bestTour.forEach((city, index) => {
+            updateMarkerWithNumber(city, index + 1);
+        });
 
         // Add distance labels on segments
         if (state.showDistances) {
