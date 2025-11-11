@@ -6,11 +6,13 @@ Thư mục này chứa website và interactive demos cho GitHub Pages.
 
 ```
 web/
-├── index.html           # Trang chủ
-├── demo/               # Interactive demos
+├── index.html              # Trang chủ
+├── playground.html         # Interactive ACO Playground 🎮
+├── aco-simulation.js       # JavaScript ACO implementation
+├── demo/                   # Interactive demos
 │   └── tsp_europe_tour.html
-├── .nojekyll           # Cho phép Jekyll bypass
-└── README.md           # File này
+├── .nojekyll              # Cho phép Jekyll bypass
+└── README.md              # File này
 ```
 
 ## GitHub Pages Setup
@@ -66,6 +68,50 @@ poetry run python examples/example_tsp_europe.py
 - Statistics và kết quả
 - Quick start guide
 - Links đến documentation
+
+### 🎮 Interactive Playground (playground.html) ⭐ NEW!
+**Real-time ACO simulation với Leaflet maps**
+
+- **Cấu hình tham số live:**
+  - Số kiến (n_ants): 10-100
+  - Số iterations: 10-200
+  - Alpha (pheromone weight): 0.1-3.0
+  - Beta (heuristic weight): 1.0-10.0
+  - Evaporation rate: 0.05-0.5
+  - Animation speed: 10-500ms
+
+- **Chọn thành phố:**
+  - Start city selection
+  - Number of cities: 10/15/20/30
+
+- **Real-time visualization:**
+  - Interactive Leaflet map với OpenStreetMap tiles
+  - City markers (green = start, blue = others)
+  - Best tour visualization (red line)
+  - Pheromone trails (blue fading lines)
+  - Click markers để xem city info
+
+- **Live statistics:**
+  - Current iteration
+  - Best distance found
+  - Improvement percentage
+  - Active ants count
+  - Paths found
+  - Average distance
+  - Elapsed time
+
+- **Controls:**
+  - Start/Pause/Resume/Reset
+  - Step-by-step execution
+  - Progress bar
+  - Convergence chart (Chart.js)
+  - Console log real-time
+
+- **Technologies:**
+  - Pure JavaScript ACO implementation
+  - Leaflet.js for interactive maps
+  - Chart.js for convergence plot
+  - Haversine distance calculation
 
 ### TSP Europe Tour Demo
 - Interactive map với 30 thành phố châu Âu

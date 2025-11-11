@@ -57,10 +57,11 @@ let state = {
     history: [],
     currentAnts: [],
 
-    // Canvas
-    canvas: null,
-    ctx: null,
-    cityPositions: {},
+    // Leaflet Map
+    map: null,
+    markers: {},
+    tourLine: null,
+    pheromoneLines: [],
 
     // Chart
     chart: null,
@@ -275,88 +276,124 @@ async function animateAnt(tour) {
     });
 }
 
-// Initialize canvas
-function initializeCanvas() {
-    state.canvas = document.getElementById('map-canvas');
-    state.ctx = state.canvas.getContext('2d');
+// Initialize Leaflet map
+function initializeMap() {
+    // Clear existing map if any
+    if (state.map) {
+        state.map.remove();
+    }
 
-    // Set canvas size
-    const container = document.getElementById('canvas-container');
-    state.canvas.width = container.clientWidth;
-    state.canvas.height = container.clientHeight;
+    // Create map centered on Europe
+    state.map = L.map('map').setView([50, 10], 4);
 
-    // Calculate city positions on canvas
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 18
+    }).addTo(state.map);
+
+    // Calculate bounds for cities
     const lats = state.cities.map(c => CITIES_DATA[c].lat);
     const lons = state.cities.map(c => CITIES_DATA[c].lon);
+    const bounds = [
+        [Math.min(...lats), Math.min(...lons)],
+        [Math.max(...lats), Math.max(...lons)]
+    ];
 
-    const minLat = Math.min(...lats);
-    const maxLat = Math.max(...lats);
-    const minLon = Math.min(...lons);
-    const maxLon = Math.max(...lons);
+    // Fit map to show all cities
+    state.map.fitBounds(bounds, { padding: [50, 50] });
 
-    const padding = 50;
-    const width = state.canvas.width - 2 * padding;
-    const height = state.canvas.height - 2 * padding;
-
-    state.cityPositions = {};
+    // Add city markers
+    state.markers = {};
     for (const city of state.cities) {
         const data = CITIES_DATA[city];
-        const x = padding + (data.lon - minLon) / (maxLon - minLon) * width;
-        const y = padding + (maxLat - data.lat) / (maxLat - minLat) * height;
-        state.cityPositions[city] = { x, y };
+        const isStart = city === state.startCity;
+
+        const marker = L.circleMarker([data.lat, data.lon], {
+            radius: isStart ? 10 : 7,
+            fillColor: isStart ? '#28a745' : '#667eea',
+            color: 'white',
+            weight: 2,
+            fillOpacity: 0.9
+        }).addTo(state.map);
+
+        marker.bindPopup(`
+            <div class="city-popup">
+                <h4>${city}</h4>
+                <p>${data.country}</p>
+                <p>📍 ${data.lat.toFixed(2)}, ${data.lon.toFixed(2)}</p>
+            </div>
+        `);
+
+        state.markers[city] = marker;
     }
 
     drawVisualization();
 }
 
-// Draw visualization
+// Draw visualization on map
 function drawVisualization() {
-    const ctx = state.ctx;
-    ctx.clearRect(0, 0, state.canvas.width, state.canvas.height);
+    if (!state.map) return;
+
+    // Remove old tour line if exists
+    if (state.tourLine) {
+        state.map.removeLayer(state.tourLine);
+        state.tourLine = null;
+    }
+
+    // Remove old pheromone lines
+    state.pheromoneLines.forEach(line => state.map.removeLayer(line));
+    state.pheromoneLines = [];
+
+    // Draw pheromone trails (top 10 strongest connections)
+    const pheromoneArray = Object.entries(state.pheromones)
+        .map(([key, value]) => ({ key, value }))
+        .sort((a, b) => b.value - a.value)
+        .slice(0, 20); // Show top 20 connections
+
+    for (const { key, value } of pheromoneArray) {
+        const [city1, city2] = key.split('-');
+        if (!CITIES_DATA[city1] || !CITIES_DATA[city2]) continue;
+
+        const coords = [
+            [CITIES_DATA[city1].lat, CITIES_DATA[city1].lon],
+            [CITIES_DATA[city2].lat, CITIES_DATA[city2].lon]
+        ];
+
+        const opacity = Math.min(value / 10, 0.5); // Scale opacity
+        const line = L.polyline(coords, {
+            color: '#667eea',
+            weight: 1,
+            opacity: opacity
+        }).addTo(state.map);
+
+        state.pheromoneLines.push(line);
+    }
 
     // Draw best tour if exists
     if (state.bestTour && state.bestTour.length > 0) {
-        ctx.strokeStyle = '#667eea';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
+        const coords = state.bestTour.map(city => {
+            const data = CITIES_DATA[city];
+            return [data.lat, data.lon];
+        });
 
-        for (let i = 0; i < state.bestTour.length; i++) {
-            const city = state.bestTour[i];
-            const pos = state.cityPositions[city];
+        // Close the tour
+        coords.push(coords[0]);
 
-            if (i === 0) {
-                ctx.moveTo(pos.x, pos.y);
-            } else {
-                ctx.lineTo(pos.x, pos.y);
-            }
-        }
+        state.tourLine = L.polyline(coords, {
+            color: '#ff6b6b',
+            weight: 3,
+            opacity: 0.8,
+            smoothFactor: 1
+        }).addTo(state.map);
 
-        // Close tour
-        const firstPos = state.cityPositions[state.bestTour[0]];
-        ctx.lineTo(firstPos.x, firstPos.y);
-        ctx.stroke();
+        // Bring tour line to front
+        state.tourLine.bringToFront();
     }
 
-    // Draw cities
-    for (const city of state.cities) {
-        const pos = state.cityPositions[city];
-        const isStart = city === state.startCity;
-
-        // City circle
-        ctx.fillStyle = isStart ? '#28a745' : '#667eea';
-        ctx.beginPath();
-        ctx.arc(pos.x, pos.y, isStart ? 8 : 6, 0, 2 * Math.PI);
-        ctx.fill();
-
-        ctx.strokeStyle = 'white';
-        ctx.lineWidth = 2;
-        ctx.stroke();
-
-        // City label
-        ctx.fillStyle = '#212529';
-        ctx.font = '11px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText(city, pos.x, pos.y - 12);
+    // Bring markers to front
+    for (const marker of Object.values(state.markers)) {
+        marker.bringToFront();
     }
 }
 
@@ -522,7 +559,7 @@ function resetSimulation() {
     state.startTime = null;
 
     initializeData();
-    initializeCanvas();
+    initializeMap();
     initializeChart();
     updateUI(Infinity, 0);
 
@@ -551,10 +588,7 @@ window.addEventListener('load', () => {
 
 // Handle window resize
 window.addEventListener('resize', () => {
-    if (state.canvas) {
-        const container = document.getElementById('canvas-container');
-        state.canvas.width = container.clientWidth;
-        state.canvas.height = container.clientHeight;
-        initializeCanvas();
+    if (state.map) {
+        state.map.invalidateSize();
     }
 });
