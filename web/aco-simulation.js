@@ -417,11 +417,11 @@ function drawVisualization() {
     state.arrowDecorators.forEach(arrow => state.map.removeLayer(arrow));
     state.arrowDecorators = [];
 
-    // Draw pheromone trails (top 20 strongest connections)
+    // Draw pheromone trails (top 30 strongest connections)
     const pheromoneArray = Object.entries(state.pheromones)
         .map(([key, value]) => ({ key, value }))
         .sort((a, b) => b.value - a.value)
-        .slice(0, 20);
+        .slice(0, 30); // Increase from 20 to 30
 
     for (const { key, value } of pheromoneArray) {
         const [city1, city2] = key.split('-');
@@ -433,10 +433,14 @@ function drawVisualization() {
         ];
 
         const distance = state.distances[key];
-        const opacity = Math.min(value / 10, 0.5);
+        // Increase opacity range: min 0.3, max 0.8 (was 0 to 0.5)
+        const opacity = Math.max(0.3, Math.min(value / 8, 0.8));
+        // Increase weight based on pheromone strength
+        const weight = Math.max(2, Math.min(value / 5, 4));
+
         const line = L.polyline(coords, {
             color: '#667eea',
-            weight: 1,
+            weight: weight,
             opacity: opacity
         }).addTo(state.map);
 
