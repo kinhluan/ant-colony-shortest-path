@@ -62,6 +62,13 @@ let state = {
     markers: {},
     tourLine: null,
     pheromoneLines: [],
+    distanceLabels: [],
+    arrowDecorators: [],
+
+    // Display options
+    showDistances: true,
+    showNumbers: true,
+    showArrows: true,
 
     // Chart
     chart: null,
@@ -325,10 +332,46 @@ function initializeMap() {
             </div>
         `);
 
-        state.markers[city] = marker;
+        state.markers[city] = { marker, data };
     }
 
     drawVisualization();
+}
+
+// Update marker with order number
+function updateMarkerWithNumber(city, orderNumber) {
+    if (!state.markers[city] || !state.showNumbers) return;
+
+    const { marker, data } = state.markers[city];
+    const isStart = city === state.startCity;
+
+    // Remove old marker
+    state.map.removeLayer(marker);
+
+    // Create new marker with number badge
+    const newMarker = L.marker([data.lat, data.lon], {
+        icon: L.divIcon({
+            html: `
+                <div class="numbered-marker">
+                    <div class="marker-circle ${isStart ? 'start' : ''}""></div>
+                    <div class="marker-number">${orderNumber}</div>
+                </div>
+            `,
+            className: 'custom-marker-icon',
+            iconSize: [30, 30],
+            iconAnchor: [15, 15]
+        })
+    }).addTo(state.map);
+
+    newMarker.bindPopup(`
+        <div class="city-popup">
+            <h4>${city} <span style="color: #ff6b6b;">#${orderNumber}</span></h4>
+            <p>${data.country}</p>
+            <p>📍 ${data.lat.toFixed(2)}, ${data.lon.toFixed(2)}</p>
+        </div>
+    `);
+
+    state.markers[city] = { marker: newMarker, data };
 }
 
 // Draw visualization on map
@@ -345,11 +388,19 @@ function drawVisualization() {
     state.pheromoneLines.forEach(line => state.map.removeLayer(line));
     state.pheromoneLines = [];
 
-    // Draw pheromone trails (top 10 strongest connections)
+    // Remove old distance labels
+    state.distanceLabels.forEach(label => state.map.removeLayer(label));
+    state.distanceLabels = [];
+
+    // Remove old arrow decorators
+    state.arrowDecorators.forEach(arrow => state.map.removeLayer(arrow));
+    state.arrowDecorators = [];
+
+    // Draw pheromone trails (top 20 strongest connections)
     const pheromoneArray = Object.entries(state.pheromones)
         .map(([key, value]) => ({ key, value }))
         .sort((a, b) => b.value - a.value)
-        .slice(0, 20); // Show top 20 connections
+        .slice(0, 20);
 
     for (const { key, value } of pheromoneArray) {
         const [city1, city2] = key.split('-');
@@ -360,12 +411,20 @@ function drawVisualization() {
             [CITIES_DATA[city2].lat, CITIES_DATA[city2].lon]
         ];
 
-        const opacity = Math.min(value / 10, 0.5); // Scale opacity
+        const distance = state.distances[key];
+        const opacity = Math.min(value / 10, 0.5);
         const line = L.polyline(coords, {
             color: '#667eea',
             weight: 1,
             opacity: opacity
         }).addTo(state.map);
+
+        // Add tooltip for pheromone lines
+        line.bindTooltip(`
+            <strong>${city1} → ${city2}</strong><br>
+            Distance: ${distance.toFixed(1)} km<br>
+            Pheromone: ${value.toFixed(2)}
+        `, { sticky: true });
 
         state.pheromoneLines.push(line);
     }
@@ -387,12 +446,84 @@ function drawVisualization() {
             smoothFactor: 1
         }).addTo(state.map);
 
+        // Add popup to tour line
+        state.tourLine.bindPopup(`
+            <div style="text-align: center;">
+                <h4 style="margin: 0 0 8px 0; color: #ff6b6b;">🏆 Best Tour</h4>
+                <p style="margin: 4px 0;"><strong>Total Distance:</strong> ${state.bestDistance.toFixed(2)} km</p>
+                <p style="margin: 4px 0;"><strong>Cities:</strong> ${state.bestTour.length}</p>
+            </div>
+        `);
+
+        // Update markers with tour order numbers
+        if (state.showNumbers) {
+            state.bestTour.forEach((city, index) => {
+                updateMarkerWithNumber(city, index + 1);
+            });
+        }
+
+        // Add distance labels on segments
+        if (state.showDistances) {
+            for (let i = 0; i < state.bestTour.length; i++) {
+                const city1 = state.bestTour[i];
+                const city2 = state.bestTour[(i + 1) % state.bestTour.length];
+
+                const data1 = CITIES_DATA[city1];
+                const data2 = CITIES_DATA[city2];
+
+                const midLat = (data1.lat + data2.lat) / 2;
+                const midLon = (data1.lon + data2.lon) / 2;
+
+                const distance = state.distances[`${city1}-${city2}`] || 0;
+
+                const distanceLabel = L.marker([midLat, midLon], {
+                    icon: L.divIcon({
+                        html: `<div class="distance-label">${distance.toFixed(0)} km</div>`,
+                        className: 'distance-label-container',
+                        iconSize: [80, 20]
+                    }),
+                    interactive: false
+                }).addTo(state.map);
+
+                state.distanceLabels.push(distanceLabel);
+            }
+        }
+
+        // Add arrow decorators
+        if (state.showArrows) {
+            for (let i = 0; i < state.bestTour.length; i++) {
+                const city1 = state.bestTour[i];
+                const city2 = state.bestTour[(i + 1) % state.bestTour.length];
+
+                const data1 = CITIES_DATA[city1];
+                const data2 = CITIES_DATA[city2];
+
+                // Calculate arrow position (60% along the segment)
+                const arrowLat = data1.lat + (data2.lat - data1.lat) * 0.6;
+                const arrowLon = data1.lon + (data2.lon - data1.lon) * 0.6;
+
+                // Calculate angle
+                const angle = Math.atan2(data2.lat - data1.lat, data2.lon - data1.lon) * 180 / Math.PI;
+
+                const arrow = L.marker([arrowLat, arrowLon], {
+                    icon: L.divIcon({
+                        html: `<div class="arrow-icon" style="transform: rotate(${angle + 90}deg);">➤</div>`,
+                        className: 'arrow-container',
+                        iconSize: [20, 20]
+                    }),
+                    interactive: false
+                }).addTo(state.map);
+
+                state.arrowDecorators.push(arrow);
+            }
+        }
+
         // Bring tour line to front
         state.tourLine.bringToFront();
     }
 
     // Bring markers to front
-    for (const marker of Object.values(state.markers)) {
+    for (const { marker } of Object.values(state.markers)) {
         marker.bringToFront();
     }
 }
@@ -505,6 +636,23 @@ function setupParameterListeners() {
             display.textContent = val;
             state[stateKey] = val;
         });
+    });
+
+    // Display toggle listeners
+    const toggles = [
+        { id: 'show-distances', state: 'showDistances' },
+        { id: 'show-numbers', state: 'showNumbers' },
+        { id: 'show-arrows', state: 'showArrows' }
+    ];
+
+    toggles.forEach(({ id, state: stateKey }) => {
+        const checkbox = document.getElementById(id);
+        if (checkbox) {
+            checkbox.addEventListener('change', (e) => {
+                state[stateKey] = e.target.checked;
+                drawVisualization();
+            });
+        }
     });
 }
 

@@ -313,6 +313,121 @@
             stroke-opacity: 0.3;
             fill: none;
         }
+
+        /* Checkbox styling */
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-label span {
+            color: #495057;
+        }
+
+        /* Distance labels */
+        .distance-label-container {
+            pointer-events: none;
+        }
+
+        .distance-label {
+            background: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #667eea;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            white-space: nowrap;
+            border: 1px solid #667eea;
+            text-align: center;
+        }
+
+        /* Numbered markers */
+        .custom-marker-icon {
+            background: none;
+            border: none;
+        }
+
+        .numbered-marker {
+            position: relative;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .marker-circle {
+            width: 14px;
+            height: 14px;
+            background: #667eea;
+            border: 2px solid white;
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+
+        .marker-circle.start {
+            background: #28a745;
+            width: 18px;
+            height: 18px;
+        }
+
+        .marker-number {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff6b6b;
+            color: white;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            z-index: 1000;
+        }
+
+        /* Arrow decorators */
+        .arrow-container {
+            pointer-events: none;
+            background: none;
+            border: none;
+        }
+
+        .arrow-icon {
+            color: #ff6b6b;
+            font-size: 16px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        /* Legend additions */
+        .legend-number {
+            width: 18px;
+            height: 18px;
+            background: #ff6b6b;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            border: 2px solid white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
     </style>
 </head>
 <body>
@@ -403,6 +518,31 @@
                 </div>
 
                 <div class="section">
+                    <h3>🎨 Hiển thị</h3>
+
+                    <div class="param-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="show-distances" checked>
+                            <span>Hiển thị khoảng cách (km)</span>
+                        </label>
+                    </div>
+
+                    <div class="param-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="show-numbers" checked>
+                            <span>Hiển thị thứ tự tour</span>
+                        </label>
+                    </div>
+
+                    <div class="param-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="show-arrows" checked>
+                            <span>Hiển thị hướng di chuyển</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="section">
                     <h3>🎮 Điều khiển</h3>
 
                     <button class="btn btn-primary" id="btn-start">▶️ Bắt đầu</button>
@@ -455,6 +595,18 @@
                         <div class="legend-item">
                             <div style="width: 20px; height: 2px; background: rgba(102,126,234,0.3);"></div>
                             <span>Pheromone</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-number">1</div>
+                            <span>Tour Order</span>
+                        </div>
+                        <div class="legend-item">
+                            <span style="font-size: 0.75em; color: #667eea;">245 km</span>
+                            <span>Distance</span>
+                        </div>
+                        <div class="legend-item">
+                            <span style="color: #ff6b6b;">➤</span>
+                            <span>Direction</span>
                         </div>
                     </div>
                 </div>
