@@ -296,6 +296,359 @@
             transform: scale(1.05);
         }
 
+        /* Tour Modal */
+        .tour-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tour-modal.show {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .tour-modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.3s ease;
+            position: relative;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .tour-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .tour-modal-header h3 {
+            margin: 0;
+            color: #667eea;
+            font-size: 1.5em;
+        }
+
+        .tour-modal-close {
+            background: #dc3545;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .tour-modal-close:hover {
+            background: #c82333;
+            transform: rotate(90deg);
+        }
+
+        .tour-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .tour-stat-item {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .tour-stat-value {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .tour-stat-label {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .tour-cities-list {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .tour-cities-list h4 {
+            margin: 0 0 15px 0;
+            color: #495057;
+        }
+
+        .tour-city-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 8px;
+            background: white;
+            border-radius: 6px;
+            border-left: 3px solid #667eea;
+            transition: all 0.2s ease;
+        }
+
+        .tour-city-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+
+        .tour-city-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-right: 15px;
+            font-size: 0.9em;
+        }
+
+        .tour-city-name {
+            flex: 1;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .tour-city-arrow {
+            color: #667eea;
+            font-size: 1.2em;
+        }
+
+        .tour-return-note {
+            text-align: center;
+            margin-top: 15px;
+            padding: 10px;
+            background: linear-gradient(135deg, #28a74515 0%, #28a74520 100%);
+            border-radius: 6px;
+            color: #28a745;
+            font-weight: 600;
+        }
+
+        /* Algorithm Details Tabs */
+        .algo-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+            flex-wrap: wrap;
+        }
+
+        .algo-tab {
+            background: none;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #6c757d;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .algo-tab:hover {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .algo-tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .algo-tab-content {
+            display: none;
+        }
+
+        .algo-tab-content.active {
+            display: block;
+        }
+
+        .algo-tab-content h4 {
+            color: #495057;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        /* Formula Cards */
+        .formula-card {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .formula-title {
+            font-weight: 700;
+            color: #495057;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+
+        .formula-math {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            color: #667eea;
+            margin-bottom: 12px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+
+        .formula-desc {
+            color: #6c757d;
+            font-size: 0.9em;
+            line-height: 1.8;
+        }
+
+        .formula-desc strong {
+            color: #495057;
+        }
+
+        .formula-desc span {
+            color: #667eea;
+            font-weight: 700;
+        }
+
+        /* Matrix Container */
+        .matrix-container {
+            max-height: 500px;
+            overflow: auto;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85em;
+            background: white;
+        }
+
+        .matrix-table th,
+        .matrix-table td {
+            border: 1px solid #dee2e6;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .matrix-table th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .matrix-table td {
+            background: white;
+        }
+
+        /* Heatmap colors */
+        .heatmap-low {
+            background: #e3f2fd !important;
+        }
+
+        .heatmap-med {
+            background: #90caf9 !important;
+        }
+
+        .heatmap-high {
+            background: #42a5f5 !important;
+            color: white;
+            font-weight: 600;
+        }
+
+        .heatmap-very-high {
+            background: #1976d2 !important;
+            color: white;
+            font-weight: 700;
+        }
+
+        /* Probability bars */
+        .prob-bar-container {
+            background: #e9ecef;
+            border-radius: 4px;
+            height: 20px;
+            position: relative;
+            overflow: hidden;
+            margin: 5px 0;
+        }
+
+        .prob-bar {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.75em;
+            font-weight: 600;
+        }
+
+        .prob-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            background: white;
+            border-radius: 6px;
+            border-left: 3px solid #667eea;
+        }
+
+        .prob-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+
         /* Map controls overlay */
         .map-overlay {
             position: absolute;
@@ -588,6 +941,13 @@
                         <div class="stat-label">Improvement</div>
                     </div>
                 </div>
+
+                <div class="section">
+                    <h3>🔬 Algorithm Details</h3>
+                    <button class="btn btn-secondary" id="btn-show-details" style="width: 100%;">
+                        📊 View Matrices & Formulas
+                    </button>
+                </div>
             </div>
 
             <!-- Visualization Area -->
@@ -656,6 +1016,122 @@
 
                 <div class="log-container" id="log-container">
                     <div class="log-line">💡 Sẵn sàng! Nhấn "Bắt đầu" để chạy thuật toán...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Algorithm Details Modal -->
+    <div id="algo-modal" class="tour-modal">
+        <div class="tour-modal-content" style="max-width: 900px;">
+            <div class="tour-modal-header">
+                <h3>🔬 Algorithm Details</h3>
+                <button class="tour-modal-close" onclick="closeAlgoModal()">×</button>
+            </div>
+
+            <!-- Tabs -->
+            <div class="algo-tabs">
+                <button class="algo-tab active" onclick="switchAlgoTab('formulas', this)">📐 Formulas</button>
+                <button class="algo-tab" onclick="switchAlgoTab('pheromone', this)">🧪 Pheromone Matrix</button>
+                <button class="algo-tab" onclick="switchAlgoTab('distances', this)">📏 Distance Matrix</button>
+                <button class="algo-tab" onclick="switchAlgoTab('probabilities', this)">🎲 Probabilities</button>
+            </div>
+
+            <!-- Tab Content: Formulas -->
+            <div id="tab-formulas" class="algo-tab-content active">
+                <h4>ACO Key Formulas</h4>
+
+                <div class="formula-card">
+                    <div class="formula-title">1. Edge Selection Probability</div>
+                    <div class="formula-math">
+                        P<sub>ij</sub> = [τ<sub>ij</sub>]<sup>α</sup> · [η<sub>ij</sub>]<sup>β</sup> / Σ [τ<sub>ik</sub>]<sup>α</sup> · [η<sub>ik</sub>]<sup>β</sup>
+                    </div>
+                    <div class="formula-desc">
+                        <strong>Where:</strong><br>
+                        • τ<sub>ij</sub> = pheromone on edge (i,j)<br>
+                        • η<sub>ij</sub> = heuristic = 1/distance<sub>ij</sub><br>
+                        • α = pheromone weight (current: <span id="formula-alpha">1.0</span>)<br>
+                        • β = heuristic weight (current: <span id="formula-beta">5.0</span>)
+                    </div>
+                </div>
+
+                <div class="formula-card">
+                    <div class="formula-title">2. Pheromone Update</div>
+                    <div class="formula-math">
+                        τ<sub>ij</sub> ← (1 - ρ) · τ<sub>ij</sub> + Δτ<sub>ij</sub>
+                    </div>
+                    <div class="formula-desc">
+                        <strong>Where:</strong><br>
+                        • ρ = evaporation rate (current: <span id="formula-evap">0.1</span>)<br>
+                        • Δτ<sub>ij</sub> = Q / L<sub>k</sub> (if edge in tour k)<br>
+                        • Q = constant (1000)<br>
+                        • L<sub>k</sub> = tour length
+                    </div>
+                </div>
+
+                <div class="formula-card">
+                    <div class="formula-title">3. Haversine Distance</div>
+                    <div class="formula-math">
+                        d = 2R · arcsin(√(sin²(Δlat/2) + cos(lat₁) · cos(lat₂) · sin²(Δlon/2)))
+                    </div>
+                    <div class="formula-desc">
+                        <strong>Where:</strong><br>
+                        • R = Earth radius = 6371 km<br>
+                        • Calculates actual distance on sphere
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Pheromone Matrix -->
+            <div id="tab-pheromone" class="algo-tab-content">
+                <h4>Pheromone Matrix (Top Connections)</h4>
+                <div id="pheromone-matrix-container" class="matrix-container">
+                    <p style="color: #6c757d;">Run simulation to see pheromone values...</p>
+                </div>
+            </div>
+
+            <!-- Tab Content: Distance Matrix -->
+            <div id="tab-distances" class="algo-tab-content">
+                <h4>Distance Matrix (Sample)</h4>
+                <div id="distance-matrix-container" class="matrix-container">
+                    <p style="color: #6c757d;">Select cities to see distance matrix...</p>
+                </div>
+            </div>
+
+            <!-- Tab Content: Probabilities -->
+            <div id="tab-probabilities" class="algo-tab-content">
+                <h4>Edge Selection Probabilities</h4>
+                <div id="probability-container" class="matrix-container">
+                    <p style="color: #6c757d;">Run simulation to see probability calculations...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tour Modal -->
+    <div id="tour-modal" class="tour-modal">
+        <div class="tour-modal-content">
+            <div class="tour-modal-header">
+                <h3>🏆 Best Tour Found</h3>
+                <button class="tour-modal-close" onclick="closeTourModal()">×</button>
+            </div>
+
+            <div class="tour-stats">
+                <div class="tour-stat-item">
+                    <div class="tour-stat-value" id="modal-distance">0</div>
+                    <div class="tour-stat-label">Total Distance (km)</div>
+                </div>
+                <div class="tour-stat-item">
+                    <div class="tour-stat-value" id="modal-cities">0</div>
+                    <div class="tour-stat-label">Cities Visited</div>
+                </div>
+            </div>
+
+            <div class="tour-cities-list">
+                <h4>📍 Tour Order</h4>
+                <div id="tour-cities-container"></div>
+                <div class="tour-return-note">
+                    ↩️ Returns to starting city to complete the tour
                 </div>
             </div>
         </div>

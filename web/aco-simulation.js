@@ -690,27 +690,34 @@ function logMessage(msg, isExpandable = false) {
     }
 }
 
-// Show full tour in a modal/alert (global function for onclick)
+// Show full tour in modal (global function for onclick)
 window.showFullTour = function() {
     if (!state.bestTour || state.bestTour.length === 0) {
         logMessage('⚠️ No tour available yet');
         return;
     }
 
-    const tourList = state.bestTour.map((city, index) => `${index + 1}. ${city}`).join('\n');
-    const message = `
-🏆 Best Tour Found
-Total Distance: ${state.bestDistance.toFixed(2)} km
-Cities: ${state.bestTour.length}
+    // Update modal content
+    document.getElementById('modal-distance').textContent = state.bestDistance.toFixed(2);
+    document.getElementById('modal-cities').textContent = state.bestTour.length;
 
-Tour Order:
-${tourList}
+    // Build cities list
+    const container = document.getElementById('tour-cities-container');
+    container.innerHTML = '';
 
-(Returns to: ${state.bestTour[0]})
-    `.trim();
+    state.bestTour.forEach((city, index) => {
+        const item = document.createElement('div');
+        item.className = 'tour-city-item';
+        item.innerHTML = `
+            <div class="tour-city-number">${index + 1}</div>
+            <div class="tour-city-name">${city}</div>
+            <div class="tour-city-arrow">→</div>
+        `;
+        container.appendChild(item);
+    });
 
-    // Show in alert for now (can be replaced with modal later)
-    alert(message);
+    // Show modal
+    document.getElementById('tour-modal').classList.add('show');
 
     // Also log to console
     console.log('=== BEST TOUR ===');
@@ -721,6 +728,23 @@ ${tourList}
     });
     console.log('================');
 };
+
+// Close tour modal (global function for onclick)
+window.closeTourModal = function() {
+    document.getElementById('tour-modal').classList.remove('show');
+};
+
+// Close modal when clicking outside
+window.addEventListener('load', () => {
+    const modal = document.getElementById('tour-modal');
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeTourModal();
+            }
+        });
+    }
+});
 
 // Event listeners for parameters
 function setupParameterListeners() {
@@ -874,5 +898,276 @@ window.addEventListener('load', () => {
 window.addEventListener('resize', () => {
     if (state.map) {
         state.map.invalidateSize();
+    }
+});
+
+// ============================================
+// Algorithm Details Modal Functions
+// ============================================
+
+// Switch tabs in Algorithm Details modal
+window.switchAlgoTab = function(tabName, targetElement) {
+    // Update tab buttons
+    const tabs = document.querySelectorAll('.algo-tab');
+    tabs.forEach(tab => tab.classList.remove('active'));
+    if (targetElement) {
+        targetElement.classList.add('active');
+    } else {
+        // Fallback: find and activate by tab name
+        tabs.forEach(tab => {
+            if (tab.textContent.includes(tabName === 'formulas' ? 'Formulas' :
+                                         tabName === 'pheromone' ? 'Pheromone' :
+                                         tabName === 'distances' ? 'Distance' : 'Probabilities')) {
+                tab.classList.add('active');
+            }
+        });
+    }
+
+    // Update content
+    const contents = document.querySelectorAll('.algo-tab-content');
+    contents.forEach(content => content.classList.remove('active'));
+    document.getElementById(`tab-${tabName}`).classList.add('active');
+
+    // Populate content based on tab
+    if (tabName === 'distances') {
+        displayDistanceMatrix();
+    } else if (tabName === 'pheromone') {
+        displayPheromoneMatrix();
+    } else if (tabName === 'probabilities') {
+        displayProbabilities();
+    } else if (tabName === 'formulas') {
+        updateFormulaValues();
+    }
+};
+
+// Update formula values with current parameters
+function updateFormulaValues() {
+    document.getElementById('formula-alpha').textContent = state.alpha.toFixed(1);
+    document.getElementById('formula-beta').textContent = state.beta.toFixed(1);
+    document.getElementById('formula-evap').textContent = state.evaporationRate.toFixed(2);
+}
+
+// Display Distance Matrix
+function displayDistanceMatrix() {
+    const container = document.getElementById('distance-matrix-container');
+
+    if (state.cities.length === 0) {
+        container.innerHTML = '<p style="color: #6c757d;">No cities selected. Start simulation first.</p>';
+        return;
+    }
+
+    // Create table
+    let html = '<table class="matrix-table"><thead><tr><th>From / To</th>';
+
+    // Limit to first 10 cities for display
+    const displayCities = state.cities.slice(0, 10);
+
+    displayCities.forEach(city => {
+        html += `<th>${city}</th>`;
+    });
+    html += '</tr></thead><tbody>';
+
+    // Add rows
+    displayCities.forEach(city1 => {
+        html += `<tr><th>${city1}</th>`;
+        displayCities.forEach(city2 => {
+            if (city1 === city2) {
+                html += '<td style="background: #e9ecef;">-</td>';
+            } else {
+                const key = `${city1}-${city2}`;
+                const distance = state.distances[key];
+                if (distance !== undefined) {
+                    html += `<td>${distance.toFixed(0)}</td>`;
+                } else {
+                    html += '<td>N/A</td>';
+                }
+            }
+        });
+        html += '</tr>';
+    });
+
+    html += '</tbody></table>';
+
+    if (state.cities.length > 10) {
+        html += `<p style="margin-top: 10px; color: #6c757d; font-size: 0.9em;">Showing first 10 of ${state.cities.length} cities</p>`;
+    }
+
+    container.innerHTML = html;
+}
+
+// Display Pheromone Matrix with heatmap
+function displayPheromoneMatrix() {
+    const container = document.getElementById('pheromone-matrix-container');
+
+    if (state.cities.length === 0 || Object.keys(state.pheromones).length === 0) {
+        container.innerHTML = '<p style="color: #6c757d;">No pheromone data yet. Run simulation first.</p>';
+        return;
+    }
+
+    // Find max pheromone for normalization
+    const maxPheromone = Math.max(...Object.values(state.pheromones));
+    const minPheromone = Math.min(...Object.values(state.pheromones));
+
+    // Create table
+    let html = '<table class="matrix-table"><thead><tr><th>From / To</th>';
+
+    // Limit to first 10 cities for display
+    const displayCities = state.cities.slice(0, 10);
+
+    displayCities.forEach(city => {
+        html += `<th>${city}</th>`;
+    });
+    html += '</tr></thead><tbody>';
+
+    // Add rows with heatmap coloring
+    displayCities.forEach(city1 => {
+        html += `<tr><th>${city1}</th>`;
+        displayCities.forEach(city2 => {
+            if (city1 === city2) {
+                html += '<td style="background: #e9ecef;">-</td>';
+            } else {
+                const key = `${city1}-${city2}`;
+                const pheromone = state.pheromones[key];
+                if (pheromone !== undefined) {
+                    // Normalize pheromone value for color intensity
+                    const normalized = (pheromone - minPheromone) / (maxPheromone - minPheromone);
+                    let colorClass = 'heatmap-low';
+                    if (normalized > 0.75) colorClass = 'heatmap-very-high';
+                    else if (normalized > 0.5) colorClass = 'heatmap-high';
+                    else if (normalized > 0.25) colorClass = 'heatmap-med';
+
+                    html += `<td class="${colorClass}">${pheromone.toFixed(2)}</td>`;
+                } else {
+                    html += '<td>N/A</td>';
+                }
+            }
+        });
+        html += '</tr>';
+    });
+
+    html += '</tbody></table>';
+
+    if (state.cities.length > 10) {
+        html += `<p style="margin-top: 10px; color: #6c757d; font-size: 0.9em;">Showing first 10 of ${state.cities.length} cities</p>`;
+    }
+
+    html += `<div style="margin-top: 15px; padding: 12px; background: #f8f9fa; border-radius: 6px; font-size: 0.85em;">
+        <strong>Color Legend:</strong><br>
+        <div style="display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 5px;">
+                <div style="width: 20px; height: 20px; background: #e3f2fd; border: 1px solid #ccc;"></div>
+                <span>Low</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 5px;">
+                <div style="width: 20px; height: 20px; background: #90caf9; border: 1px solid #ccc;"></div>
+                <span>Medium</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 5px;">
+                <div style="width: 20px; height: 20px; background: #42a5f5; border: 1px solid #ccc;"></div>
+                <span>High</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 5px;">
+                <div style="width: 20px; height: 20px; background: #1976d2; border: 1px solid #ccc;"></div>
+                <span>Very High</span>
+            </div>
+        </div>
+        <p style="margin-top: 8px; color: #6c757d;">Higher pheromone = stronger ant trail (better path)</p>
+    </div>`;
+
+    container.innerHTML = html;
+}
+
+// Display Edge Selection Probabilities
+function displayProbabilities() {
+    const container = document.getElementById('probability-container');
+
+    if (!state.bestTour || state.bestTour.length === 0) {
+        container.innerHTML = '<p style="color: #6c757d;">No tour data yet. Run simulation first.</p>';
+        return;
+    }
+
+    let html = '<div style="padding: 10px;">';
+    html += '<p style="margin-bottom: 15px; color: #495057;">Edge selection probabilities for a sample city in the best tour:</p>';
+
+    // Use the start city as example
+    const exampleCity = state.startCity;
+    const unvisited = state.cities.filter(c => c !== exampleCity).slice(0, 8); // Show top 8
+
+    // Calculate probabilities
+    const probabilities = {};
+    let sum = 0;
+
+    for (const nextCity of unvisited) {
+        const key = `${exampleCity}-${nextCity}`;
+        const pheromone = state.pheromones[key] || 1.0;
+        const distance = state.distances[key];
+        const heuristic = distance > 0 ? 1.0 / distance : 1.0;
+
+        const attractiveness = Math.pow(pheromone, state.alpha) * Math.pow(heuristic, state.beta);
+        probabilities[nextCity] = attractiveness;
+        sum += attractiveness;
+    }
+
+    // Normalize and sort by probability
+    const sortedProbs = Object.entries(probabilities)
+        .map(([city, prob]) => ({ city, prob: prob / sum }))
+        .sort((a, b) => b.prob - a.prob);
+
+    html += `<h4 style="margin-bottom: 10px; color: #667eea;">From: ${exampleCity}</h4>`;
+
+    sortedProbs.forEach(({ city, prob }) => {
+        const key = `${exampleCity}-${city}`;
+        const pheromone = state.pheromones[key] || 1.0;
+        const distance = state.distances[key];
+        const percentage = (prob * 100).toFixed(1);
+
+        html += `
+            <div class="prob-item">
+                <div class="prob-label">To: ${city}</div>
+                <div style="font-size: 0.85em; color: #6c757d; margin-bottom: 5px;">
+                    Distance: ${distance.toFixed(0)} km | Pheromone: ${pheromone.toFixed(2)}
+                </div>
+                <div class="prob-bar-container">
+                    <div class="prob-bar" style="width: ${percentage}%">${percentage}%</div>
+                </div>
+            </div>
+        `;
+    });
+
+    html += `<p style="margin-top: 15px; font-size: 0.85em; color: #6c757d;">
+        Formula: P = [τ<sup>α</sup> × η<sup>β</sup>] / Σ[τ<sup>α</sup> × η<sup>β</sup>]<br>
+        Where τ = pheromone, η = 1/distance, α = ${state.alpha}, β = ${state.beta}
+    </p>`;
+
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// Show Algorithm Details Modal
+window.showAlgoModal = function() {
+    updateFormulaValues();
+    document.getElementById('algo-modal').classList.add('show');
+};
+
+// Close Algorithm Details Modal
+window.closeAlgoModal = function() {
+    document.getElementById('algo-modal').classList.remove('show');
+};
+
+// Setup modal event listeners
+window.addEventListener('load', () => {
+    const algoModal = document.getElementById('algo-modal');
+    if (algoModal) {
+        algoModal.addEventListener('click', (e) => {
+            if (e.target === algoModal) {
+                closeAlgoModal();
+            }
+        });
+    }
+
+    // Connect "View Matrices & Formulas" button
+    const btnShowDetails = document.getElementById('btn-show-details');
+    if (btnShowDetails) {
+        btnShowDetails.addEventListener('click', showAlgoModal);
     }
 });
