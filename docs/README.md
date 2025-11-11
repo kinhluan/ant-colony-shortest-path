@@ -156,7 +156,7 @@ Nếu bạn muốn cải thiện hoặc thêm tài liệu:
 
 ## Liên Hệ
 
-**Tác giả:** Kinhluan - SGU
+**Tác giả:**Luân B
 
 **Repository:** ant-colony-shortest-path
 
