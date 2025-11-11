@@ -287,18 +287,18 @@ Start/End City:     Paris
 
 ### Ưu điểm của ACO
 
-✅ **Tìm được giải pháp rất tốt** (gần optimal)
-✅ **Linh hoạt** - dễ điều chỉnh parameters
-✅ **Song song hóa** - nhiều kiến chạy độc lập
-✅ **Tự điều chỉnh** - pheromone tự cân bằng
-✅ **Kết hợp local search** - 2-opt cải thiện thêm
+- ✅ **Tìm được giải pháp rất tốt** (gần optimal)
+- ✅ **Linh hoạt** - dễ điều chỉnh parameters
+- ✅ **Song song hóa** - nhiều kiến chạy độc lập
+- ✅ **Tự điều chỉnh** - pheromone tự cân bằng
+- ✅ **Kết hợp local search** - 2-opt cải thiện thêm
 
 ### Nhược điểm của ACO
 
-❌ **Chậm hơn NN** (~1000x)
-❌ **Cần điều chỉnh parameters** (α, β, ρ, Q)
-❌ **Stochastic** - kết quả có thể khác nhau mỗi lần chạy
-❌ **Không đảm bảo optimal** - có thể stuck ở local optimum
+- ❌ **Chậm hơn NN** (~1000x)
+- ❌ **Cần điều chỉnh parameters** (α, β, ρ, Q)
+- ❌ **Stochastic** - kết quả có thể khác nhau mỗi lần chạy
+- ❌ **Không đảm bảo optimal** - có thể stuck ở local optimum
 
 ---
 
@@ -525,12 +525,12 @@ with Pool(processes=4) as pool:
 
 ### Thành tựu đạt được
 
-✅ Giải quyết TSP cho 30 European cities
-✅ Improvement 14.96% so với Nearest Neighbor
-✅ Kết quả ổn định và tái lặp được
-✅ Visualization đẹp và dễ hiểu
-✅ Interactive map với Folium
-✅ Tối ưu hóa với Elitist + Max-Min + 2-opt
+- ✅ Giải quyết TSP cho 30 European cities
+- ✅ Improvement 14.96% so với Nearest Neighbor
+- ✅ Kết quả ổn định và tái lặp được
+- ✅ Visualization đẹp và dễ hiểu
+- ✅ Interactive map với Folium
+- ✅ Tối ưu hóa với Elitist + Max-Min + 2-opt
 
 ### Kết quả đạt được
 

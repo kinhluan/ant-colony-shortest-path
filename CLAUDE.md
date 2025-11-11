@@ -112,7 +112,7 @@ Both implementations follow this pattern:
   - `two_opt_improve()` - Local search optimization
   - `calculate_distance_matrix()` - Precompute all pairwise distances
 
-- **`src/visualization.py`**: Shortest path visualization (NetworkX graphs)
+- **`src/visualization.py`**: Shortest Path visualization (NetworkX graphs)
 - **`src/tsp_visualization.py`**: TSP visualization (Matplotlib + Folium interactive maps)
 
 ## Data Structures
@@ -278,3 +278,15 @@ Core dependencies (see `pyproject.toml`):
 - `folium` - Interactive map generation for TSP
 
 Poetry manages all dependencies - no manual pip installs needed.
+
+## Interacting with Claude
+
+This `CLAUDE.md` file serves as a contextual guide for Claude Code (claude.ai/code) when interacting with this project. Claude can use the information provided here to:
+
+*   **Understand Project Context:** Quickly grasp the project's purpose, architecture, and key components.
+*   **Execute Commands:** Run setup scripts, examples, and tests as described in the "Development Commands" section.
+*   **Navigate Codebase:** Understand the file organization and the responsibilities of different modules.
+*   **Assist with Development:** Help with tasks like refactoring, debugging, adding features, or generating tests, by leveraging the detailed algorithmic explanations and implementation specifics.
+*   **Troubleshoot Issues:** Use the "Common Pitfalls" and "Performance Characteristics" sections to diagnose and resolve problems.
+
+By utilizing this `CLAUDE.md` context, Claude can provide more accurate, relevant, and efficient assistance for this Ant Colony Optimization project.

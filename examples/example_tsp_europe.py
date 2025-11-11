@@ -161,7 +161,8 @@ def main():
     print("\n" + "=" * 80)
     print("VISUALIZATION 6: Interactive Map (Folium)")
     print("=" * 80)
-    map_path = "tsp_europe_tour.html"
+    # Save to web/demo directory for GitHub Pages
+    map_path = os.path.join(os.path.dirname(__file__), '..', 'web', 'demo', 'tsp_europe_tour.html')
     interactive_map = plot_interactive_tour(cities, aco_tour, aco_distance, save_path=map_path)
 
     # ==========================================

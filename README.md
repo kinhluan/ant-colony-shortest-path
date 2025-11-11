@@ -1,6 +1,7 @@
 # Ant Colony Optimization for Shortest Path Finding & TSP
 
 Triển khai thuật toán **Ant Colony Optimization (ACO)** cho:
+
 1. **Shortest Path Problem** - Tìm đường đi ngắn nhất trong đồ thị
 2. **Traveling Salesman Problem (TSP)** - Tìm tour ngắn nhất qua tất cả các điểm
 
@@ -91,6 +92,7 @@ poetry run python examples/example_simple.py
 ```
 
 Chạy ACO trên đồ thị 7 nodes, hiển thị:
+
 - Visualization của đồ thị
 - Đường đi tốt nhất tìm được
 - Biểu đồ hội tụ
@@ -107,6 +109,7 @@ poetry run python examples/example_sparse_graph.py
 ```
 
 Chạy ACO trên đồ thị 15 nodes phân bố thành 3 clusters rõ ràng:
+
 - Visualization dễ nhìn với màu sắc phân biệt clusters
 - Cross-cluster pathfinding
 - Fixed positions để dễ theo dõi
@@ -123,6 +126,7 @@ poetry run python examples/example_complex.py
 ```
 
 Chạy ACO trên đồ thị lớn 100 nodes phân bố đều theo grid:
+
 - Grid layout với 100 nodes phân bố đồng đều
 - 5 tests với bộ tham số khác nhau
 - So sánh performance và accuracy
@@ -142,6 +146,7 @@ poetry run python examples/example_tsp_europe.py
 **Traveling Salesman Problem** - Tìm tour ngắn nhất qua 30 thành phố châu Âu:
 
 **Features:**
+
 - 🌍 **30 major European cities** với GPS coordinates thực
 - 🧮 **Haversine distance** - Khoảng cách thực tế (km)
 - 🎯 **Complete graph** - Mọi city kết nối với nhau
@@ -153,6 +158,7 @@ poetry run python examples/example_tsp_europe.py
 - ⚖️ **Benchmark** với Nearest Neighbor và Random tours
 
 **Output:**
+
 - Shortest tour visiting all 30 cities
 - Distance comparison (ACO vs NN vs Random)
 - Interactive HTML map (tsp_europe_tour.html)
@@ -160,6 +166,7 @@ poetry run python examples/example_tsp_europe.py
 - Multiple starting cities comparison
 
 **Typical Results:**
+
 - Nearest Neighbor: ~12,000-15,000 km
 - ACO Optimized: ~10,000-12,000 km
 - Improvement: 15-25%
@@ -318,6 +325,7 @@ Khởi tạo thuật toán ACO.
 Chạy thuật toán để tìm đường đi ngắn nhất.
 
 **Returns:**
+
 - `best_path` (List[int]): Đường đi tốt nhất
 - `best_distance` (float): Độ dài đường đi
 - `history` (List[float]): Lịch sử best distance qua các iterations
@@ -366,6 +374,7 @@ So sánh nhiều lần chạy với các tham số khác nhau.
 ## Ví dụ kết quả
 
 ### Simple Graph (7 nodes)
+
 ```
 Best path: 0 -> 1 -> 4 -> 6
 Best distance: 8.00
@@ -374,6 +383,7 @@ Optimal distance: 8.00
 ```
 
 ### Sparse Graph (15 nodes, 3 clusters)
+
 ```
 Test 1 (Cluster A → Cluster C):
   ACO path: 0 -> 10 -> 11 -> 13 -> 14
@@ -387,6 +397,7 @@ Test 2 (Cluster B → Cluster A):
 ```
 
 ### Complex Graph (20 nodes)
+
 ```
 Test 1 (Default)        Distance: 24.53    Time: 2.15s    Error: 2.34%
 Test 2 (More Ants)      Distance: 23.97    Time: 4.82s    Error: 0.00%
@@ -398,7 +409,7 @@ Test 4 (Low Evap)       Distance: 24.31    Time: 2.19s    Error: 1.42%
 
 - [Ant Colony Optimization on Medium](https://medium.com/@abdallahashraf90/ant-colony-optimization-algorithm-for-shortest-path-problem-in-graph-3b5e9a4f8d2a)
 - [ACO GitHub Repository](https://github.com/vasilibotnaru/ant-colony-optimization)
-- NetworkX Documentation: https://networkx.org/
+- NetworkX Documentation: <https://networkx.org/>
 
 ## Tác giả
 
