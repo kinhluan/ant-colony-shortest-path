@@ -71,3 +71,15 @@ For example:
 *   **Typing:** The code uses type hints for better readability and maintainability.
 *   **Modularity:** The project is organized into modules with clear responsibilities (e.g., `aco.py` for the algorithm, `visualization.py` for plotting).
 *   **Documentation:** The code includes docstrings that explain the purpose of classes, methods, and functions. The `README.md` file provides a comprehensive overview of the project.
+
+# Interacting with Gemini CLI
+
+This `GEMINI.md` file serves as a contextual guide for the Gemini CLI when interacting with this project. You can use the Gemini CLI to:
+
+*   **Get Project Information:** Ask questions about the project structure, purpose, or specific code implementations. For example: "What is the purpose of `src/aco.py`?", "How do I run the simple example?", or "Summarize the ACO algorithm as implemented in this project."
+*   **Run Scripts and Examples:** Execute any of the provided shell scripts or Python examples directly through the CLI. For example: "Run the `setup.sh` script," or "Execute `example_complex.py`."
+*   **Modify Code:** Request changes, refactor code, or add new features. The Gemini CLI will use the context provided in this file and other project files to understand and implement your requests while adhering to existing conventions. For example: "Add a new parameter to the `AntColony` class to control the initial pheromone value," or "Refactor the `_construct_solution` method in `aco.py` to improve readability."
+*   **Generate Tests:** Ask the CLI to generate unit tests for specific functions or modules.
+*   **Troubleshoot:** Get assistance with debugging or understanding error messages.
+
+By leveraging the Gemini CLI with this `GEMINI.md` context, you can efficiently navigate, understand, and develop within this Ant Colony Optimization project.
