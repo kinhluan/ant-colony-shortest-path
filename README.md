@@ -402,7 +402,7 @@ Test 4 (Low Evap)       Distance: 24.31    Time: 2.19s    Error: 1.42%
 
 ## Tác giả
 
-Kinhluan - SGU
+Luân B
 
 ## License
 
