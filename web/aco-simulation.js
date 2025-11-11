@@ -574,9 +574,11 @@ function drawVisualization() {
         state.tourLine.bringToFront();
     }
 
-    // Bring markers to front
+    // Bring markers to front (only CircleMarkers have this method)
     for (const { marker } of Object.values(state.markers)) {
-        marker.bringToFront();
+        if (marker.bringToFront) {
+            marker.bringToFront();
+        }
     }
 }
 
@@ -706,6 +708,36 @@ function setupParameterListeners() {
             });
         }
     });
+
+    // City selection listeners
+    const startCitySelect = document.getElementById('start-city');
+    const numCitiesSelect = document.getElementById('num-cities');
+
+    if (startCitySelect) {
+        startCitySelect.addEventListener('change', () => {
+            if (!state.running) {
+                resetSimulation();
+                logMessage(`🏙️ Changed start city to: ${startCitySelect.value}`);
+            } else {
+                logMessage('⚠️ Stop simulation first to change start city');
+                // Revert selection
+                startCitySelect.value = state.startCity;
+            }
+        });
+    }
+
+    if (numCitiesSelect) {
+        numCitiesSelect.addEventListener('change', () => {
+            if (!state.running) {
+                resetSimulation();
+                logMessage(`🔢 Changed number of cities to: ${numCitiesSelect.value}`);
+            } else {
+                logMessage('⚠️ Stop simulation first to change number of cities');
+                // Revert selection
+                numCitiesSelect.value = state.numCities;
+            }
+        });
+    }
 }
 
 // Control buttons
