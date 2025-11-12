@@ -133,6 +133,397 @@
             </div>
         </section>
 
+        <section class="section" id="history">
+            <div class="section-header">
+                <h2>📜 Lịch Sử & Phát Triển ACO</h2>
+                <p>Hành trình từ 1991 đến nay: Các thuật toán ACO đã phát triển và ứng dụng ra sao?</p>
+            </div>
+
+            <!-- Tab Navigation -->
+            <div class="tab-nav">
+                <button class="tab-btn active" onclick="switchTab('timeline')">⏳ Timeline</button>
+                <button class="tab-btn" onclick="switchTab('algorithms')">🔬 Thuật Toán</button>
+                <button class="tab-btn" onclick="switchTab('comparison')">📊 So Sánh</button>
+            </div>
+
+            <!-- Tab 1: Timeline -->
+            <div id="tab-timeline" class="tab-content active">
+                <div class="timeline-container">
+                    <div class="timeline-line"></div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-year">1991</div>
+                        <div class="timeline-content">
+                            <h4>🎯 The Birth - Ant System (AS)</h4>
+                            <div class="author">Marco Dorigo (PhD Thesis)</div>
+                            <ul>
+                                <li>Thuật toán ACO đầu tiên</li>
+                                <li>Lấy cảm hứng từ kiến Argentina</li>
+                                <li>Áp dụng cho bài toán TSP</li>
+                                <li>Sử dụng pheromone trail concept</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-year">1997</div>
+                        <div class="timeline-content">
+                            <h4>🚀 Ant Colony System (ACS)</h4>
+                            <div class="author">Dorigo & Gambardella</div>
+                            <ul>
+                                <li>Local pheromone update</li>
+                                <li>Pseudo-random proportional rule</li>
+                                <li>Cân bằng exploration vs exploitation tốt hơn</li>
+                                <li>Hiệu suất cao hơn AS 20-30%</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-year">1999</div>
+                        <div class="timeline-content">
+                            <h4>📈 MAX-MIN Ant System (MMAS)</h4>
+                            <div class="author">Stützle & Hoos</div>
+                            <ul>
+                                <li>Giới hạn pheromone: [τ_min, τ_max]</li>
+                                <li>Ngăn chặn stagnation (trì trệ)</li>
+                                <li>Chỉ best ant được update</li>
+                                <li>Tăng khả năng tìm global optimum</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-year">2002</div>
+                        <div class="timeline-content">
+                            <h4>🔢 Continuous Optimization (ACO<sub>ℝ</sub>)</h4>
+                            <div class="author">Socha & Dorigo</div>
+                            <ul>
+                                <li>Mở rộng sang miền liên tục</li>
+                                <li>Không chỉ bài toán rời rạc</li>
+                                <li>Sử dụng Gaussian kernels</li>
+                                <li>Ứng dụng: Engineering design</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-year">2004</div>
+                        <div class="timeline-content">
+                            <h4>🎯 Multi-Objective ACO</h4>
+                            <div class="author">Research Community</div>
+                            <ul>
+                                <li>Tối ưu nhiều mục tiêu đồng thời</li>
+                                <li>Pareto-optimal solutions</li>
+                                <li>Conflicting objectives</li>
+                                <li>Ứng dụng: Scheduling, routing</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-year">2010</div>
+                        <div class="timeline-content">
+                            <h4>⚡ Parallel & Adaptive ACO</h4>
+                            <div class="author">Multiple Researchers</div>
+                            <ul>
+                                <li>Multi-core & GPU acceleration</li>
+                                <li>Distributed computing</li>
+                                <li>Adaptive parameter tuning</li>
+                                <li>Tăng tốc 10-100x</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-year">2020</div>
+                        <div class="timeline-content">
+                            <h4>🧠 Deep Learning Integration</h4>
+                            <div class="author">Modern Research</div>
+                            <ul>
+                                <li>ACO + Neural Networks</li>
+                                <li>Reinforcement Learning hybrid</li>
+                                <li>Feature selection tự động</li>
+                                <li>Hyperparameter optimization</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-year">2025</div>
+                        <div class="timeline-content">
+                            <h4>🔮 Current & Future</h4>
+                            <div class="author">Ongoing Research</div>
+                            <ul>
+                                <li>Quantum-inspired ACO</li>
+                                <li>Swarm Robotics applications</li>
+                                <li>IoT & Cloud optimization</li>
+                                <li>Autonomous vehicles routing</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Algorithms -->
+            <div id="tab-algorithms" class="tab-content">
+                <div class="algo-grid">
+                    <div class="algo-card">
+                        <div class="algo-header">
+                            <span class="algo-icon">🐜</span>
+                            <span class="algo-year">1991</span>
+                        </div>
+                        <h4>Ant System</h4>
+                        <div class="algo-abbrev">(AS)</div>
+                        <ul class="algo-features">
+                            <li>Thuật toán ACO cơ bản</li>
+                            <li>Tất cả kiến deposit pheromone</li>
+                            <li>Proportional selection rule</li>
+                        </ul>
+                        <div class="algo-footer">
+                            <span class="algo-tag">Education</span>
+                            <span class="algo-tag">TSP</span>
+                        </div>
+                    </div>
+
+                    <div class="algo-card">
+                        <div class="algo-header">
+                            <span class="algo-icon">⭐</span>
+                            <span class="algo-year">1996</span>
+                        </div>
+                        <h4>Elitist Ant System</h4>
+                        <div class="algo-abbrev">(EAS)</div>
+                        <ul class="algo-features">
+                            <li>Chỉ best ants update pheromone</li>
+                            <li>Hội tụ nhanh hơn AS</li>
+                            <li>Weighted pheromone deposit</li>
+                        </ul>
+                        <div class="algo-footer">
+                            <span class="algo-tag">Fast</span>
+                            <span class="algo-tag">Small TSP</span>
+                        </div>
+                    </div>
+
+                    <div class="algo-card">
+                        <div class="algo-header">
+                            <span class="algo-icon">🚀</span>
+                            <span class="algo-year">1997</span>
+                        </div>
+                        <h4>Ant Colony System</h4>
+                        <div class="algo-abbrev">(ACS)</div>
+                        <ul class="algo-features">
+                            <li>Local + global pheromone update</li>
+                            <li>Pseudo-random selection</li>
+                            <li>Exploitation tốt hơn</li>
+                        </ul>
+                        <div class="algo-footer">
+                            <span class="algo-tag">High Performance</span>
+                            <span class="algo-tag">VRP</span>
+                        </div>
+                    </div>
+
+                    <div class="algo-card">
+                        <div class="algo-header">
+                            <span class="algo-icon">📈</span>
+                            <span class="algo-year">1999</span>
+                        </div>
+                        <h4>MAX-MIN Ant System</h4>
+                        <div class="algo-abbrev">(MMAS)</div>
+                        <ul class="algo-features">
+                            <li>Bounded pheromone [τ_min, τ_max]</li>
+                            <li>Prevent premature convergence</li>
+                            <li>Pheromone trail reinitialization</li>
+                        </ul>
+                        <div class="algo-footer">
+                            <span class="algo-tag">Robust</span>
+                            <span class="algo-tag">Large TSP</span>
+                        </div>
+                    </div>
+
+                    <div class="algo-card">
+                        <div class="algo-header">
+                            <span class="algo-icon">🏆</span>
+                            <span class="algo-year">2000</span>
+                        </div>
+                        <h4>Rank-Based Ant System</h4>
+                        <div class="algo-abbrev">(RAS)</div>
+                        <ul class="algo-features">
+                            <li>Top-k ants update pheromone</li>
+                            <li>Weighted by rank</li>
+                            <li>Balance quality & diversity</li>
+                        </ul>
+                        <div class="algo-footer">
+                            <span class="algo-tag">Quality</span>
+                        </div>
+                    </div>
+
+                    <div class="algo-card">
+                        <div class="algo-header">
+                            <span class="algo-icon">🔢</span>
+                            <span class="algo-year">2002</span>
+                        </div>
+                        <h4>Continuous ACO</h4>
+                        <div class="algo-abbrev">(ACO<sub>ℝ</sub>)</div>
+                        <ul class="algo-features">
+                            <li>Real-valued domains</li>
+                            <li>Gaussian kernel functions</li>
+                            <li>Engineering optimization</li>
+                        </ul>
+                        <div class="algo-footer">
+                            <span class="algo-tag">Continuous</span>
+                            <span class="algo-tag">Design</span>
+                        </div>
+                    </div>
+
+                    <div class="algo-card">
+                        <div class="algo-header">
+                            <span class="algo-icon">🎯</span>
+                            <span class="algo-year">2004</span>
+                        </div>
+                        <h4>Multi-Objective ACO</h4>
+                        <div class="algo-abbrev">(MOACO)</div>
+                        <ul class="algo-features">
+                            <li>Multiple conflicting objectives</li>
+                            <li>Pareto-optimal fronts</li>
+                            <li>Archive-based approach</li>
+                        </ul>
+                        <div class="algo-footer">
+                            <span class="algo-tag">Multi-obj</span>
+                            <span class="algo-tag">Scheduling</span>
+                        </div>
+                    </div>
+
+                    <div class="algo-card">
+                        <div class="algo-header">
+                            <span class="algo-icon">💻</span>
+                            <span class="algo-year">2008</span>
+                        </div>
+                        <h4>Parallel ACO</h4>
+                        <div class="algo-abbrev">(PACO)</div>
+                        <ul class="algo-features">
+                            <li>Multi-threaded execution</li>
+                            <li>GPU acceleration</li>
+                            <li>Distributed colonies</li>
+                        </ul>
+                        <div class="algo-footer">
+                            <span class="algo-tag">Fast</span>
+                            <span class="algo-tag">Scalable</span>
+                        </div>
+                    </div>
+
+                    <div class="algo-card">
+                        <div class="algo-header">
+                            <span class="algo-icon">🧠</span>
+                            <span class="algo-year">2020</span>
+                        </div>
+                        <h4>Neural ACO</h4>
+                        <div class="algo-abbrev">(NACO)</div>
+                        <ul class="algo-features">
+                            <li>Deep learning integration</li>
+                            <li>Adaptive heuristics</li>
+                            <li>Feature selection</li>
+                        </ul>
+                        <div class="algo-footer">
+                            <span class="algo-tag">AI</span>
+                            <span class="algo-tag">Modern</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: Comparison -->
+            <div id="tab-comparison" class="tab-content">
+                <div class="comparison-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Thuật toán</th>
+                                <th>Năm</th>
+                                <th>Tốc độ</th>
+                                <th>Chất lượng</th>
+                                <th>Ứng dụng</th>
+                                <th>Độ phức tạp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Ant System (AS)</strong></td>
+                                <td>1991</td>
+                                <td><span class="rating">⭐⭐☆☆☆</span></td>
+                                <td><span class="rating">⭐⭐⭐☆☆</span></td>
+                                <td>Education, Small TSP</td>
+                                <td>O(n²m)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Elitist AS (EAS)</strong></td>
+                                <td>1996</td>
+                                <td><span class="rating">⭐⭐⭐☆☆</span></td>
+                                <td><span class="rating">⭐⭐⭐⭐☆</span></td>
+                                <td>Small-Medium TSP</td>
+                                <td>O(n²m)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ACS</strong></td>
+                                <td>1997</td>
+                                <td><span class="rating">⭐⭐⭐⭐☆</span></td>
+                                <td><span class="rating">⭐⭐⭐⭐⭐</span></td>
+                                <td>VRP, QAP, General</td>
+                                <td>O(n²m)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>MMAS</strong></td>
+                                <td>1999</td>
+                                <td><span class="rating">⭐⭐⭐⭐☆</span></td>
+                                <td><span class="rating">⭐⭐⭐⭐⭐</span></td>
+                                <td>Large TSP, Robust</td>
+                                <td>O(n²m)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Rank-Based AS</strong></td>
+                                <td>2000</td>
+                                <td><span class="rating">⭐⭐⭐☆☆</span></td>
+                                <td><span class="rating">⭐⭐⭐⭐☆</span></td>
+                                <td>Quality-focused</td>
+                                <td>O(n²m log m)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ACO<sub>ℝ</sub></strong></td>
+                                <td>2002</td>
+                                <td><span class="rating">⭐⭐⭐☆☆</span></td>
+                                <td><span class="rating">⭐⭐⭐⭐☆</span></td>
+                                <td>Continuous domains</td>
+                                <td>O(dm²)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>MOACO</strong></td>
+                                <td>2004</td>
+                                <td><span class="rating">⭐⭐☆☆☆</span></td>
+                                <td><span class="rating">⭐⭐⭐⭐☆</span></td>
+                                <td>Multi-objective</td>
+                                <td>O(kn²m)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Parallel ACO</strong></td>
+                                <td>2008</td>
+                                <td><span class="rating">⭐⭐⭐⭐⭐</span></td>
+                                <td><span class="rating">⭐⭐⭐⭐☆</span></td>
+                                <td>Large-scale problems</td>
+                                <td>O(n²m/p)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="margin-top: 2rem; padding: 1.5rem; background: var(--bg-light); border-radius: var(--radius); border-left: 4px solid var(--primary-color);">
+                    <h3 style="color: var(--dark-color); margin-bottom: 1rem;">📊 Giải thích</h3>
+                    <p style="margin-bottom: 0.75rem;"><strong>Tốc độ:</strong> Số sao càng nhiều = hội tụ càng nhanh</p>
+                    <p style="margin-bottom: 0.75rem;"><strong>Chất lượng:</strong> Khả năng tìm giải pháp tối ưu</p>
+                    <p style="margin-bottom: 0.75rem;"><strong>Độ phức tạp:</strong> n=số nút, m=số kiến, p=số processors, k=số objectives, d=số dimensions</p>
+                    <p><strong>Gợi ý:</strong> MMAS và ACS là lựa chọn tốt nhất cho hầu hết bài toán TSP thực tế</p>
+                </div>
+            </div>
+        </section>
+
         <section class="section" id="docs">
             <div class="section-header">
                 <h2>📚 Tài Liệu & Mã Nguồn</h2>
@@ -207,6 +598,32 @@ cd web && python -m http.server 8000</code></pre>
             </p>
         </div>
     </footer>
+
+    <script>
+        // Tab switching functionality
+        function switchTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all buttons
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            tabButtons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected tab content
+            const selectedTab = document.getElementById(`tab-${tabName}`);
+            if (selectedTab) {
+                selectedTab.classList.add('active');
+            }
+
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+    </script>
 
 </body>
 </html>
