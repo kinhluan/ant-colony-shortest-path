@@ -14,573 +14,199 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <style>
-        :root {
-            --primary: #667eea;
-            --primary-dark: #5568d3;
-            --secondary: #764ba2;
-            --success: #28a745;
-            --danger: #dc3545;
-            --dark: #212529;
-            --light: #f8f9fa;
-            --border: #e9ecef;
-            --shadow: rgba(0, 0, 0, 0.1);
-            --shadow-lg: rgba(0, 0, 0, 0.3);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
-            color: var(--dark);
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            min-height: 100vh;
-            padding: 20px;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        /* Animated background */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background:
-                radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.2) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.2) 0%, transparent 50%);
-            animation: pulse 15s ease-in-out infinite;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 25px 80px var(--shadow-lg);
-            overflow: hidden;
-            position: relative;
-            z-index: 1;
-            animation: fadeInUp 0.8s ease-out;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            padding: 60px 40px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        header * {
-            position: relative;
-            z-index: 1;
-        }
-
-        header h1 {
-            font-size: 3.5em;
-            margin-bottom: 15px;
-            font-weight: 800;
-            letter-spacing: -1px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-
-        header p {
-            font-size: 1.3em;
-            opacity: 0.95;
-            font-weight: 400;
-        }
-
-        .header-badge {
-            display: inline-block;
-            background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(10px);
-            padding: 8px 20px;
-            border-radius: 50px;
-            margin-top: 20px;
-            font-size: 0.9em;
-            font-weight: 600;
-            border: 1px solid rgba(255,255,255,0.3);
-        }
-
-        .content {
-            padding: 40px;
-        }
-
-        .section {
-            margin-bottom: 40px;
-        }
-
-        .section h2 {
-            color: #667eea;
-            font-size: 1.8em;
-            margin-bottom: 20px;
-            border-bottom: 3px solid #667eea;
-            padding-bottom: 10px;
-        }
-
-        .demo-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
-        }
-
-        .demo-card {
-            background: white;
-            border: 2px solid var(--border);
-            border-radius: 16px;
-            padding: 30px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            text-decoration: none;
-            color: inherit;
-            display: block;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .demo-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.4s ease;
-        }
-
-        .demo-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .demo-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.25);
-            border-color: var(--primary);
-        }
-
-        .demo-card-icon {
-            font-size: 3em;
-            margin-bottom: 15px;
-            display: block;
-        }
-
-        .demo-card h3 {
-            color: var(--dark);
-            font-size: 1.5em;
-            margin-bottom: 12px;
-            font-weight: 700;
-        }
-
-        .demo-card p {
-            color: #6c757d;
-            margin-bottom: 20px;
-            line-height: 1.7;
-        }
-
-        .demo-card .badge {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.8em;
-            font-weight: 600;
-            margin-right: 8px;
-            margin-top: 5px;
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-        }
-
-        .demo-card .badge.new {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
-            animation: pulse-badge 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse-badge {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .demo-card.disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .demo-card.disabled:hover {
-            transform: none;
-            box-shadow: none;
-            border-color: var(--border);
-        }
-
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .feature {
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border-left: 4px solid #667eea;
-        }
-
-        .feature h3 {
-            color: #667eea;
-            margin-bottom: 10px;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 25px;
-            margin: 40px 0;
-            padding: 40px;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
-            border-radius: 16px;
-            border: 1px solid var(--border);
-        }
-
-        .stat {
-            text-align: center;
-            padding: 20px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px var(--shadow);
-            transition: all 0.3s ease;
-        }
-
-        .stat:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px var(--shadow);
-        }
-
-        .stat-number {
-            font-size: 3em;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            display: block;
-            line-height: 1.2;
-        }
-
-        .stat-label {
-            color: #6c757d;
-            font-size: 0.95em;
-            margin-top: 8px;
-            font-weight: 600;
-        }
-
-        .btn {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 14px 32px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 700;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            margin-right: 12px;
-            margin-top: 12px;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-            position: relative;
-            overflow: hidden;
-            border: none;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s;
-        }
-
-        .btn:hover::before {
-            left: 100%;
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
-        }
-
-        .btn-secondary {
-            background: linear-gradient(135deg, #6c757d, #5a6268);
-            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
-        }
-
-        .btn-secondary:hover {
-            box-shadow: 0 8px 25px rgba(108, 117, 125, 0.4);
-        }
-
-        footer {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            padding: 40px;
-            text-align: center;
-            color: #6c757d;
-            border-top: 3px solid var(--border);
-        }
-
-        footer a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        footer a:hover {
-            color: var(--secondary);
-            text-decoration: underline;
-        }
-
-        footer strong {
-            color: var(--dark);
-            font-size: 1.1em;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            header h1 {
-                font-size: 2.5em;
-            }
-
-            header p {
-                font-size: 1.1em;
-            }
-
-            .demo-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .stats {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .btn {
-                display: block;
-                margin: 10px 0;
-            }
-        }
-
-        code {
-            background: #f8f9fa;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-family: 'Courier New', monospace;
-            color: #e83e8c;
-        }
-
-        .highlight {
-            background: linear-gradient(120deg, #667eea33 0%, #764ba233 100%);
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-weight: 600;
-        }
-    </style>
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🐜 Ant Colony Optimization</h1>
-            <p>Giải thuật tối ưu hóa đàn kiến cho Shortest Path & TSP</p>
-            <div class="header-badge">
-                ✨ Metaheuristic Algorithm | NP-Hard Problem Solver
-            </div>
-        </header>
 
-        <div class="content">
-            <div class="section">
-                <h2>📊 Kết quả Demo</h2>
+    <header>
+        <div class="container">
+            <h1><span class="icon">🐜</span> Ant Colony Optimization</h1>
+            <p>Một khám phá về giải thuật tối ưu hóa đàn kiến cho bài toán tìm đường đi ngắn nhất (Shortest Path) và người bán hàng (TSP).</p>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <section class="section" id="introduction">
+            <div class="section-header">
+                <h2>🤔 ACO là gì?</h2>
+                <p>Ant Colony Optimization (ACO) là một thuật toán tối ưu hóa metaheuristic lấy cảm hứng từ hành vi tìm kiếm đường đi ngắn nhất của đàn kiến.</p>
+            </div>
+            <div class="content-block">
+                <p>
+                    Trong tự nhiên, kiến tìm kiếm thức ăn và để lại một chất hóa học gọi là pheromone trên đường đi. Những con kiến khác có xu hướng đi theo những con đường có nồng độ pheromone cao hơn. Theo thời gian, những con đường ngắn hơn sẽ tích tụ nhiều pheromone hơn vì kiến có thể đi lại nhanh hơn, dẫn đến việc tìm ra đường đi tối ưu.
+                </p>
+                <p style="margin-top: 1rem;">
+                    Thuật toán ACO mô phỏng quá trình này để giải quyết các bài toán tối ưu hóa phức tạp, đặc biệt là các bài toán tìm đường đi như Traveling Salesman Problem (TSP) và Shortest Path Problem. Nó sử dụng "kiến ảo" để khám phá các giải pháp, cập nhật "vệt pheromone ảo" và dần dần hội tụ về giải pháp tối ưu.
+                </p>
+            </div>
+        </section>
+
+        <section class="section" id="demos">
+            <div class="section-header">
+                <h2>📊 Demo Tương Tác</h2>
                 <p>Khám phá các demo tương tác của thuật toán ACO áp dụng cho bài toán TSP với dữ liệu thực tế.</p>
+            </div>
 
-                <div class="stats">
-                    <div class="stat">
-                        <span class="stat-number">30</span>
-                        <span class="stat-label">Thành phố châu Âu</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number">13,217 km</span>
-                        <span class="stat-label">Khoảng cách tối ưu</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number">~15%</span>
-                        <span class="stat-label">Cải thiện so với NN</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number">200</span>
-                        <span class="stat-label">Iterations</span>
-                    </div>
+            <div class="stats-grid">
+                <div class="stat">
+                    <span class="stat-number">30</span>
+                    <span class="stat-label">Thành phố châu Âu</span>
                 </div>
-
-                <div class="demo-grid">
-                    <a href="playground.html" class="demo-card">
-                        <span class="demo-card-icon">🎮</span>
-                        <h3>Interactive Playground</h3>
-                        <p>Thử nghiệm thuật toán ACO real-time! Tuỳ chỉnh tham số, chọn thành phố và xem visualization sinh động từng bước trên bản đồ tương tác.</p>
-                        <span class="badge new">NEW ⭐</span>
-                        <span class="badge">Real-time</span>
-                        <span class="badge">Leaflet Maps</span>
-                    </a>
-
-                    <a href="demo/tsp_europe_tour.html" class="demo-card">
-                        <span class="demo-card-icon">🗺️</span>
-                        <h3>TSP Europe Tour</h3>
-                        <p>Bản đồ tương tác Folium hiển thị tour tối ưu qua 30 thành phố châu Âu với GPS coordinates thực tế và visualizations đẹp mắt.</p>
-                        <span class="badge">Interactive</span>
-                        <span class="badge">13,216 km</span>
-                    </a>
-
-                    <div class="demo-card disabled">
-                        <span class="demo-card-icon">📈</span>
-                        <h3>Advanced Analytics</h3>
-                        <p>Phân tích chi tiết convergence, pheromone trails, statistical insights và comparison với các thuật toán khác.</p>
-                        <span class="badge" style="background: #6c757d;">Coming Soon</span>
-                    </div>
+                <div class="stat">
+                    <span class="stat-number">13,217 km</span>
+                    <span class="stat-label">Khoảng cách tối ưu</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">~15%</span>
+                    <span class="stat-label">Cải thiện so với NN</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">200</span>
+                    <span class="stat-label">Iterations</span>
                 </div>
             </div>
 
-            <div class="section">
-                <h2>✨ Đặc điểm nổi bật</h2>
-                <div class="features">
-                    <div class="feature">
-                        <h3>🎯 Elitist Strategy</h3>
-                        <p>Chỉ top 20% kiến tốt nhất được cập nhật pheromone, tăng tốc độ hội tụ.</p>
+            <div class="demo-grid">
+                <a href="demo/simple_aco.html" class="demo-card">
+                    <span class="demo-card-icon">🎓</span>
+                    <h3>ACO - Giải Thích Đơn Giản</h3>
+                    <p>Tìm hiểu thuật toán ACO với đồ thị 5 nút đơn giản. Giải thích từng bước, công thức toán học và demo tương tác.</p>
+                    <div class="badge-container">
+                        <span class="badge new">Mới</span>
+                        <span class="badge secondary">Giáo dục</span>
+                        <span class="badge secondary">Tương tác</span>
                     </div>
-                    <div class="feature">
-                        <h3>📊 Max-Min Ant System</h3>
-                        <p>Giới hạn pheromone trong khoảng [τ_min, τ_max] để tránh stagnation.</p>
+                </a>
+
+                <a href="demo/playground.html" class="demo-card">
+                    <span class="demo-card-icon">🎮</span>
+                    <h3>Interactive Playground</h3>
+                    <p>Thử nghiệm thuật toán ACO real-time! Tuỳ chỉnh tham số, chọn thành phố và xem visualization sinh động.</p>
+                    <div class="badge-container">
+                        <span class="badge secondary">Real-time</span>
+                        <span class="badge secondary">Leaflet.js</span>
                     </div>
-                    <div class="feature">
-                        <h3>🔍 2-opt Local Search</h3>
-                        <p>Tối ưu hóa tour sau mỗi iteration bằng cách hoán đổi cạnh.</p>
+                </a>
+
+                <a href="demo/tsp_europe_tour.html" class="demo-card">
+                    <span class="demo-card-icon">🗺️</span>
+                    <h3>TSP Europe Tour</h3>
+                    <p>Bản đồ tương tác Folium hiển thị tour tối ưu qua 30 thành phố châu Âu với tọa độ GPS thực tế.</p>
+                    <div class="badge-container">
+                        <span class="badge secondary">Interactive</span>
+                        <span class="badge secondary">Folium</span>
                     </div>
-                    <div class="feature">
-                        <h3>🌍 Haversine Distance</h3>
-                        <p>Tính khoảng cách thực tế trên Trái Đất từ GPS coordinates.</p>
-                    </div>
+                </a>
+            </div>
+        </section>
+
+        <section class="section" id="features">
+            <div class="section-header">
+                <h2>✨ Đặc Điểm Nổi Bật</h2>
+                <p>Các kỹ thuật chính được sử dụng để nâng cao hiệu quả và tốc độ hội tụ của thuật toán.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature">
+                    <div class="icon">🎯</div>
+                    <h3>Elitist Strategy</h3>
+                    <p>Chỉ những con kiến "tinh hoa" (top 20%) mới được cập nhật pheromone, giúp tăng tốc độ hội tụ.</p>
+                </div>
+                <div class="feature">
+                    <div class="icon">📊</div>
+                    <h3>Max-Min Ant System</h3>
+                    <p>Giới hạn pheromone trong khoảng [τ_min, τ_max] để tránh tình trạng trì trệ (stagnation).</p>
+                </div>
+                <div class="feature">
+                    <div class="icon">🔍</div>
+                    <h3>2-opt Local Search</h3>
+                    <p>Tối ưu hóa cục bộ tour sau mỗi vòng lặp bằng cách hoán đổi các cạnh không giao nhau.</p>
+                </div>
+                <div class="feature">
+                    <div class="icon">🌍</div>
+                    <h3>Haversine Distance</h3>
+                    <p>Tính toán khoảng cách thực tế trên bề mặt Trái Đất dựa trên tọa độ GPS.</p>
                 </div>
             </div>
+        </section>
 
-            <div class="section">
-                <h2>📚 Tài liệu & Source Code</h2>
-                <p>Dự án mã nguồn mở với tài liệu đầy đủ, examples và visualizations.</p>
+        <section class="section" id="docs">
+            <div class="section-header">
+                <h2>📚 Tài Liệu & Mã Nguồn</h2>
+                <p>Dự án là mã nguồn mở với tài liệu chi tiết, ví dụ và hướng dẫn sử dụng.</p>
+            </div>
 
-                <div style="margin-top: 20px;">
-                    <a href="https://github.com/yourusername/ant-colony-shortest-path" class="btn" target="_blank">
-                        📂 GitHub Repository
-                    </a>
-                    <a href="TSP_DOCUMENTATION.html" class="btn btn-secondary">
-                        📖 Tài liệu TSP
-                    </a>
-                    <a href="IMPLEMENTATION.html" class="btn btn-secondary">
-                        🔧 Chi tiết Implementation
-                    </a>
-                </div>
-
-                <div style="margin-top: 40px; padding: 35px; background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05)); border-radius: 16px; border: 2px solid var(--border);">
-                    <h3 style="color: var(--primary); margin-bottom: 20px; font-size: 1.5em; font-weight: 700;">⚡ Quick Start</h3>
-                    <pre style="background: var(--dark); color: #00ff00; padding: 25px; border-radius: 12px; overflow-x: auto; font-family: 'Courier New', monospace; font-size: 0.9em; box-shadow: 0 4px 15px var(--shadow);"><code># Clone repository
-git clone https://github.com/yourusername/ant-colony-shortest-path.git
+            <div class="quick-start">
+                <h3>⚡ Bắt đầu nhanh</h3>
+                <pre><code class="language-bash"><span class="comment"># Clone repository</span>
+git clone https://github.com/kinhluan/ant-colony-shortest-path.git
 cd ant-colony-shortest-path
 
-# Setup with Poetry
+<span class="comment"># Setup with Poetry</span>
 poetry install
 
-# Run TSP example
+<span class="comment"># Run TSP example</span>
 poetry run python examples/example_tsp_europe.py
 
-# Start web demo locally
+<span class="comment"># Start web demo locally</span>
 cd web && python -m http.server 8000</code></pre>
-                </div>
             </div>
-
-            <div class="section">
-                <h2>🎓 Về Dự án</h2>
-                <p>
-                    Dự án này triển khai <span class="highlight">Ant Colony Optimization (ACO)</span> - một thuật toán metaheuristic
-                    lấy cảm hứng từ hành vi tìm đường của đàn kiến trong tự nhiên. ACO đã được áp dụng thành công
-                    cho nhiều bài toán tối ưu tổ hợp, đặc biệt là <span class="highlight">Traveling Salesman Problem (TSP)</span>.
-                </p>
-
-                <p style="margin-top: 15px;">
-                    <strong>Kết quả đạt được:</strong>
-                </p>
-                <ul style="margin-left: 30px; margin-top: 10px; line-height: 2;">
-                    <li>✅ Giải quyết TSP cho 30 thành phố châu Âu</li>
-                    <li>✅ Cải thiện <strong>14.96%</strong> so với Nearest Neighbor</li>
-                    <li>✅ Hội tụ nhanh trong 20-30 iterations đầu</li>
-                    <li>✅ Kết quả ổn định và tái lặp được</li>
-                    <li>✅ Visualizations đẹp và dễ hiểu</li>
-                </ul>
+            
+            <div class="button-group">
+                <a href="https://github.com/kinhluan/ant-colony-shortest-path" class="btn" target="_blank">
+                    📂 GitHub Repository
+                </a>
+                <a href="#" class="btn btn-secondary">
+                    📖 Tài liệu TSP
+                </a>
+                <a href="#" class="btn btn-secondary">
+                    🔧 Chi tiết Implementation
+                </a>
             </div>
-        </div>
+        </section>
 
-        <footer>
+        <section class="section about-section" id="about">
+            <div class="section-header">
+                <h2>🎓 Về Dự Án</h2>
+            </div>
             <p>
-                <strong>Ant Colony Optimization for Shortest Path & TSP</strong><br>
-                Tác giả:Luân B<br>
-                License: MIT |
-                <a href="https://github.com/yourusername/ant-colony-shortest-path">GitHub</a> |
-                <a href="https://github.com/yourusername/ant-colony-shortest-path/issues">Report Issues</a>
+                Dự án này triển khai <span class="highlight">Ant Colony Optimization (ACO)</span>, một thuật toán metaheuristic
+                lấy cảm hứng từ hành vi tìm kiếm thức ăn của đàn kiến trong tự nhiên. ACO đã được áp dụng thành công
+                cho nhiều bài toán tối ưu tổ hợp, đặc biệt là <span class="highlight">Traveling Salesman Problem (TSP)</span>.
             </p>
-            <p style="margin-top: 15px; font-size: 0.9em;">
-                Dự án sử dụng: Python • NetworkX • NumPy • Matplotlib • Folium
+            <p style="margin-top: 1rem;">
+                <strong>Một số kết quả chính:</strong>
             </p>
-        </footer>
-    </div>
+            <ul>
+                <li>Giải quyết bài toán TSP cho 30 thành phố lớn ở châu Âu.</li>
+                <li>Đạt được lộ trình tối ưu tốt hơn <strong>~15%</strong> so với thuật toán tham lam (Nearest Neighbor).</li>
+                <li>Thuật toán cho thấy sự hội tụ nhanh trong khoảng 20-30 vòng lặp đầu tiên.</li>
+                <li>Cung cấp các visualizations trực quan và dễ hiểu về quá trình tối ưu.</li>
+            </ul>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>
+                <strong>Ant Colony Optimization for Shortest Path & TSP</strong>
+            </p>
+            <div class="footer-links">
+                <a href="https://github.com/kinhluan/ant-colony-shortest-path" target="_blank">GitHub</a>
+                <a href="https://github.com/kinhluan/ant-colony-shortest-path/issues" target="_blank">Báo lỗi</a>
+            </div>
+            <p>
+                Tác giả: Luân B | License: MIT
+            </p>
+            <p style="margin-top: 1rem; font-size: 0.9em;">
+                Dự án sử dụng: Python, NetworkX, NumPy, Matplotlib, Folium
+            </p>
+        </div>
+    </footer>
+
 </body>
 </html>

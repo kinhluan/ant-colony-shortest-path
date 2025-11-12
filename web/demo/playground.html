@@ -826,9 +826,40 @@
             border: 2px solid white;
             box-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
+
+        .back-button-fixed {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 9999;
+            background-color: #2c3e50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button-fixed:hover {
+            background-color: #34495e;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
+    <a href="../index.html" class="back-button-fixed">
+        <span>←</span>
+        <span>Quay lại Trang chủ</span>
+    </a>
+
     <div class="container">
         <header>
             <h1>🐜 ACO TSP Interactive Playground</h1>
