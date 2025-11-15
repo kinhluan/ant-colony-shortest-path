@@ -125,14 +125,143 @@
         .param-item strong {
             color: #0369a1;
         }
+
+        /* Menu Navigation Styles */
+        .menu-nav {
+            position: sticky;
+            top: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin: -20px -20px 20px -20px;
+        }
+
+        .menu-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .menu-logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .menu-links a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .menu-links a:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .menu-links a:active {
+            transform: translateY(0);
+        }
+
+        /* Scroll-to-top button */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 1001;
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+        }
+
+        /* Responsive menu */
+        @media (max-width: 768px) {
+            .menu-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .menu-logo {
+                justify-content: center;
+            }
+
+            .menu-links {
+                flex-direction: column;
+            }
+
+            .menu-links a {
+                text-align: center;
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Menu Navigation -->
+    <nav class="menu-nav">
+        <div class="menu-container">
+            <a href="#" class="menu-logo">
+                <span>🐜</span>
+                <span>ACO Flowchart</span>
+            </a>
+            <div class="menu-links">
+                <a href="#flowchart">📊 Flowchart</a>
+                <a href="#legend">📋 Chú thích</a>
+                <a href="#formulas">📐 Công thức</a>
+                <a href="#params">⚙️ Tham số</a>
+            </div>
+        </div>
+    </nav>
+
     <div class="container">
         <h1>🐜 Flowchart Thuật Toán ACO</h1>
         <div class="subtitle">Ant Colony Optimization - Tối Ưu Hóa Đàn Kiến</div>
-        
-        <div class="mermaid">
+
+        <div id="flowchart" class="mermaid">
 flowchart LR
     Start([Bắt đầu])
     Init[Khởi tạo tham số<br/>α, β, ρ, Q, m]
@@ -187,7 +316,7 @@ flowchart LR
     class Evaporate,UpdatePh,AddPh pheromone
         </div>
 
-        <div class="legend">
+        <div id="legend" class="legend">
             <h2>📋 Chú thích màu sắc</h2>
             <div class="legend-grid">
                 <div class="legend-item">
@@ -213,7 +342,7 @@ flowchart LR
             </div>
         </div>
 
-        <div class="formulas">
+        <div id="formulas" class="formulas">
             <h2>📐 Công thức toán học chính</h2>
             
             <div class="formula-item">
@@ -246,7 +375,7 @@ flowchart LR
             </div>
         </div>
 
-        <div class="params">
+        <div id="params" class="params">
             <h2>⚙️ Tham số thuật toán</h2>
             <div class="params-grid">
                 <div class="param-item">
@@ -283,8 +412,14 @@ flowchart LR
         </div>
     </div>
 
+    <!-- Scroll to top button -->
+    <div class="scroll-top" id="scrollTop">
+        ↑
+    </div>
+
     <script>
-        mermaid.initialize({ 
+        // Initialize Mermaid
+        mermaid.initialize({
             startOnLoad: true,
             theme: 'default',
             flowchart: {
@@ -292,6 +427,66 @@ flowchart LR
                 htmlLabels: true,
                 curve: 'basis'
             }
+        });
+
+        // Smooth scroll for menu links
+        document.querySelectorAll('.menu-links a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+
+                if (targetElement) {
+                    const offsetTop = targetElement.offsetTop - 80; // Account for sticky menu
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Scroll to top button functionality
+        const scrollTopBtn = document.getElementById('scrollTop');
+
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+        });
+
+        scrollTopBtn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Highlight active menu item on scroll
+        const sections = document.querySelectorAll('[id]');
+        const menuLinks = document.querySelectorAll('.menu-links a');
+
+        window.addEventListener('scroll', function() {
+            let current = '';
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.clientHeight;
+
+                if (window.pageYOffset >= sectionTop &&
+                    window.pageYOffset < sectionTop + sectionHeight) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            menuLinks.forEach(link => {
+                link.style.background = 'rgba(255,255,255,0.1)';
+                if (link.getAttribute('href') === '#' + current) {
+                    link.style.background = 'rgba(255,255,255,0.25)';
+                }
+            });
         });
     </script>
 </body>
