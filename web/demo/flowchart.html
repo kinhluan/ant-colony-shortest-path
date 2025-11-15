@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACO Flowchart - Mermaid</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        .mermaid {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            overflow-x: auto;
+        }
+        .legend {
+            margin-top: 40px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 10px;
+        }
+        .legend h2 {
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .legend-color {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+        .formulas {
+            margin-top: 30px;
+            padding: 25px;
+            background: #fff9db;
+            border-radius: 10px;
+            border: 2px solid #f59e0b;
+        }
+        .formulas h2 {
+            color: #b45309;
+            margin-bottom: 20px;
+        }
+        .formula-item {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #f59e0b;
+        }
+        .formula-item strong {
+            color: #b45309;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .formula-item code {
+            background: #f3f4f6;
+            padding: 8px 12px;
+            border-radius: 5px;
+            display: block;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+        }
+        .params {
+            margin-top: 30px;
+            padding: 25px;
+            background: #e0f2fe;
+            border-radius: 10px;
+        }
+        .params h2 {
+            color: #0369a1;
+            margin-bottom: 20px;
+        }
+        .params-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .param-item {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #0369a1;
+        }
+        .param-item strong {
+            color: #0369a1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐜 Flowchart Thuật Toán ACO</h1>
+        <div class="subtitle">Ant Colony Optimization - Tối Ưu Hóa Đàn Kiến</div>
+        
+        <div class="mermaid">
+flowchart LR
+    Start([Bắt đầu])
+    Init[Khởi tạo tham số<br/>α, β, ρ, Q, m]
+    InitPh[Khởi tạo Pheromone<br/>τij = τ₀]
+    CreateAnts[Tạo m kiến<br/>tại các nút ngẫu nhiên]
+    
+    LoopStart{{Vòng lặp: k = 1 to m}}
+    BuildSol[Xây dựng giải pháp<br/>cho kiến k]
+    
+    CalcProb{Tính xác suất chọn nút j<br/>p = τ^α × η^β / Σ}
+    SelectNode[Chọn nút j theo xác suất]
+    MoveAnt[Di chuyển kiến k đến nút j]
+    CheckComplete{Tour hoàn thành?}
+    
+    Evaporate[Bốc hơi Pheromone<br/>τ = 1-ρ × τ]
+    UpdatePh[Cập nhật Pheromone<br/>Δτ = Q / Lk]
+    AddPh[τ = τ + Σ Δτ]
+    
+    SaveBest[Lưu giải pháp tốt nhất]
+    CheckStop{Điều kiện dừng?<br/>Max iteration hoặc hội tụ}
+    End([Kết thúc<br/>Trả về giải pháp tốt nhất])
+    
+    Start --> Init
+    Init --> InitPh
+    InitPh --> CreateAnts
+    CreateAnts --> LoopStart
+    LoopStart --> BuildSol
+    BuildSol --> CalcProb
+    CalcProb --> SelectNode
+    SelectNode --> MoveAnt
+    MoveAnt --> CheckComplete
+    CheckComplete -->|Chưa| CalcProb
+    CheckComplete -->|Rồi| LoopStart
+    LoopStart --> Evaporate
+    Evaporate --> UpdatePh
+    UpdatePh --> AddPh
+    AddPh --> SaveBest
+    SaveBest --> CheckStop
+    CheckStop -->|Không| CreateAnts
+    CheckStop -->|Có| End
+    
+    classDef startEnd fill:#22c55e,stroke:#166534,color:#fff,stroke-width:3px
+    classDef process fill:#3b82f6,stroke:#1e40af,color:#fff,stroke-width:2px
+    classDef decision fill:#f59e0b,stroke:#b45309,color:#fff,stroke-width:2px
+    classDef loop fill:#8b5cf6,stroke:#5b21b6,color:#fff,stroke-width:3px
+    classDef pheromone fill:#ef4444,stroke:#991b1b,color:#fff,stroke-width:2px
+    
+    class Start,End startEnd
+    class Init,InitPh,CreateAnts,BuildSol,SelectNode,MoveAnt,SaveBest process
+    class CalcProb,CheckComplete,CheckStop decision
+    class LoopStart loop
+    class Evaporate,UpdatePh,AddPh pheromone
+        </div>
+
+        <div class="legend">
+            <h2>📋 Chú thích màu sắc</h2>
+            <div class="legend-grid">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #22c55e; border: 3px solid #166534;"></div>
+                    <span><strong>Bắt đầu/Kết thúc</strong><br>Điểm khởi động và kết thúc</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #3b82f6; border: 2px solid #1e40af;"></div>
+                    <span><strong>Xử lý</strong><br>Các bước xử lý dữ liệu</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #f59e0b; border: 2px solid #b45309;"></div>
+                    <span><strong>Quyết định</strong><br>Điểm rẽ nhánh logic</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #8b5cf6; border: 3px solid #5b21b6;"></div>
+                    <span><strong>Vòng lặp</strong><br>Lặp qua tất cả kiến</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ef4444; border: 2px solid #991b1b;"></div>
+                    <span><strong>Cập nhật Pheromone</strong><br>Bốc hơi và thêm mới</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="formulas">
+            <h2>📐 Công thức toán học chính</h2>
+            
+            <div class="formula-item">
+                <strong>1. Xác suất chọn nút:</strong>
+                <code>p<sub>ij</sub><sup>k</sup> = [τ<sub>ij</sub>]<sup>α</sup> · [η<sub>ij</sub>]<sup>β</sup> / Σ<sub>l∈N<sub>i</sub></sub>[τ<sub>il</sub>]<sup>α</sup> · [η<sub>il</sub>]<sup>β</sup></code>
+                <div style="margin-top: 8px; color: #666; font-size: 0.9em;">
+                    Trong đó: η<sub>ij</sub> = 1/d<sub>ij</sub> (visibility - heuristic information)
+                </div>
+            </div>
+
+            <div class="formula-item">
+                <strong>2. Bốc hơi Pheromone:</strong>
+                <code>τ<sub>ij</sub>(t+1) = (1 - ρ) · τ<sub>ij</sub>(t)</code>
+                <div style="margin-top: 8px; color: #666; font-size: 0.9em;">
+                    ρ ∈ (0,1] là hệ số bốc hơi
+                </div>
+            </div>
+
+            <div class="formula-item">
+                <strong>3. Cập nhật Pheromone tổng:</strong>
+                <code>τ<sub>ij</sub>(t+1) = (1 - ρ) · τ<sub>ij</sub>(t) + Σ<sub>k=1</sub><sup>m</sup> Δτ<sub>ij</sub><sup>k</sup></code>
+            </div>
+
+            <div class="formula-item">
+                <strong>4. Pheromone từ kiến k:</strong>
+                <code>Δτ<sub>ij</sub><sup>k</sup> = Q / L<sub>k</sub> (nếu kiến k đi qua cạnh ij, ngược lại = 0)</code>
+                <div style="margin-top: 8px; color: #666; font-size: 0.9em;">
+                    L<sub>k</sub> là độ dài tour của kiến k
+                </div>
+            </div>
+        </div>
+
+        <div class="params">
+            <h2>⚙️ Tham số thuật toán</h2>
+            <div class="params-grid">
+                <div class="param-item">
+                    <strong>α (alpha)</strong><br>
+                    Trọng số pheromone<br>
+                    <em>Thường = 1</em>
+                </div>
+                <div class="param-item">
+                    <strong>β (beta)</strong><br>
+                    Trọng số heuristic<br>
+                    <em>Thường = 2-5</em>
+                </div>
+                <div class="param-item">
+                    <strong>ρ (rho)</strong><br>
+                    Tỷ lệ bốc hơi<br>
+                    <em>0.1 - 0.5</em>
+                </div>
+                <div class="param-item">
+                    <strong>Q</strong><br>
+                    Hằng số pheromone<br>
+                    <em>1 - 100</em>
+                </div>
+                <div class="param-item">
+                    <strong>m</strong><br>
+                    Số lượng kiến<br>
+                    <em>10 - 50</em>
+                </div>
+                <div class="param-item">
+                    <strong>τ₀</strong><br>
+                    Pheromone ban đầu<br>
+                    <em>0.1 - 1.0</em>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>
