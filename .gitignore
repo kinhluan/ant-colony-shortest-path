@@ -41,7 +41,6 @@ poetry.lock
 
 # Jupyter Notebook
 .ipynb_checkpoints
-*.ipynb
 
 # Testing
 .pytest_cache/
